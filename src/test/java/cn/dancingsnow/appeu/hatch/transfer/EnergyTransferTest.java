@@ -80,6 +80,34 @@ class EnergyTransferTest {
     }
 
     @Test
+    void partialExtractionReturnsActualAmountAndPreservesEnergy() {
+        PartialPort source = new PartialPort(1_000, 700, 250);
+        long local = 100;
+        long initialTotal = source.stored + local;
+
+        long moved = EnergyTransfer.pull(source, local, 1_000, 800);
+        local += moved;
+
+        assertEquals(250, moved);
+        assertEquals(700, source.lastExtractRequest);
+        assertEquals(initialTotal, source.stored + local);
+    }
+
+    @Test
+    void partialInsertionReturnsActualAmountAndPreservesEnergy() {
+        PartialPort destination = new PartialPort(100, 600, 200);
+        long local = 700;
+        long initialTotal = destination.stored + local;
+
+        long moved = EnergyTransfer.push(destination, local, 800);
+        local -= moved;
+
+        assertEquals(200, moved);
+        assertEquals(600, destination.lastInsertOffer);
+        assertEquals(initialTotal, destination.stored + local);
+    }
+
+    @Test
     void clampsMaliciousExtractionResultsAtBothStages() {
         ScriptedPort tooLarge = new ScriptedPort(Long.MAX_VALUE, Long.MAX_VALUE);
         ScriptedPort negativeSimulation = new ScriptedPort(-1, 50);
@@ -200,6 +228,45 @@ class EnergyTransferTest {
 
         @Override
         public long insert(long offered) {
+            return modulated;
+        }
+    }
+
+    private static final class PartialPort implements EnergyPort {
+
+        private long stored;
+        private final long simulated;
+        private final long modulated;
+        private long lastExtractRequest = -1;
+        private long lastInsertOffer = -1;
+
+        private PartialPort(long stored, long simulated, long modulated) {
+            this.stored = stored;
+            this.simulated = simulated;
+            this.modulated = modulated;
+        }
+
+        @Override
+        public long simulateExtract(long requested) {
+            return simulated;
+        }
+
+        @Override
+        public long extract(long requested) {
+            lastExtractRequest = requested;
+            stored -= modulated;
+            return modulated;
+        }
+
+        @Override
+        public long simulateInsert(long offered) {
+            return simulated;
+        }
+
+        @Override
+        public long insert(long offered) {
+            lastInsertOffer = offered;
+            stored += modulated;
             return modulated;
         }
     }
