@@ -40,4 +40,7 @@ dependencies {
     api(gtnh290.appliedEnergistics2Unofficial) { artifact { classifier = "dev" } }
 
     runtimeOnlyNonPublishable(gtnh290.angelica) { artifact { classifier = "dev" } }
+
+    testImplementation("org.junit.jupiter:junit-jupiter:5.12.2")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
