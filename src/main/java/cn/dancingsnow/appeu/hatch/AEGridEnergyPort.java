@@ -19,18 +19,8 @@ public final class AEGridEnergyPort implements EnergyPort {
     }
 
     @Override
-    public long simulateExtract(long requested) {
-        return extract(requested, Actionable.SIMULATE);
-    }
-
-    @Override
     public long extract(long requested) {
         return extract(requested, Actionable.MODULATE);
-    }
-
-    @Override
-    public long simulateInsert(long offered) {
-        return insert(offered, Actionable.SIMULATE);
     }
 
     @Override

@@ -27,6 +27,17 @@ class EnergyTransferTest {
     }
 
     @Test
+    void successfulTransfersTouchEachPortOnce() {
+        FakePort source = new FakePort(600, 1_000);
+        FakePort destination = new FakePort(0, 1_000);
+
+        assertEquals(600, EnergyTransfer.pull(source, 100, 1_000, 800));
+        assertEquals(800, EnergyTransfer.push(destination, 900, 800));
+        assertEquals(1, source.calls);
+        assertEquals(1, destination.calls);
+    }
+
+    @Test
     void zeroLimitDoesNotTouchEitherPort() {
         FakePort source = new FakePort(600, 1_000);
         FakePort destination = new FakePort(0, 1_000);
@@ -81,7 +92,7 @@ class EnergyTransferTest {
 
     @Test
     void partialExtractionReturnsActualAmountAndPreservesEnergy() {
-        PartialPort source = new PartialPort(1_000, 700, 250);
+        PartialPort source = new PartialPort(1_000, 250);
         long local = 100;
         long initialTotal = source.stored + local;
 
@@ -89,13 +100,13 @@ class EnergyTransferTest {
         local += moved;
 
         assertEquals(250, moved);
-        assertEquals(700, source.lastExtractRequest);
+        assertEquals(800, source.lastExtractRequest);
         assertEquals(initialTotal, source.stored + local);
     }
 
     @Test
     void partialInsertionReturnsActualAmountAndPreservesEnergy() {
-        PartialPort destination = new PartialPort(100, 600, 200);
+        PartialPort destination = new PartialPort(100, 200);
         long local = 700;
         long initialTotal = destination.stored + local;
 
@@ -103,29 +114,25 @@ class EnergyTransferTest {
         local -= moved;
 
         assertEquals(200, moved);
-        assertEquals(600, destination.lastInsertOffer);
+        assertEquals(700, destination.lastInsertOffer);
         assertEquals(initialTotal, destination.stored + local);
     }
 
     @Test
-    void clampsMaliciousExtractionResultsAtBothStages() {
-        ScriptedPort tooLarge = new ScriptedPort(Long.MAX_VALUE, Long.MAX_VALUE);
-        ScriptedPort negativeSimulation = new ScriptedPort(-1, 50);
-        ScriptedPort negativeExtraction = new ScriptedPort(50, -1);
+    void clampsMaliciousExtractionResults() {
+        ScriptedPort tooLarge = new ScriptedPort(Long.MAX_VALUE);
+        ScriptedPort negativeExtraction = new ScriptedPort(-1);
 
         assertEquals(100, EnergyTransfer.pull(tooLarge, 0, 100, 100));
-        assertEquals(0, EnergyTransfer.pull(negativeSimulation, 0, 100, 100));
         assertEquals(0, EnergyTransfer.pull(negativeExtraction, 0, 100, 100));
     }
 
     @Test
-    void clampsMaliciousInsertionResultsAtBothStages() {
-        ScriptedPort tooLarge = new ScriptedPort(Long.MAX_VALUE, Long.MAX_VALUE);
-        ScriptedPort negativeSimulation = new ScriptedPort(-1, 50);
-        ScriptedPort negativeInsertion = new ScriptedPort(50, -1);
+    void clampsMaliciousInsertionResults() {
+        ScriptedPort tooLarge = new ScriptedPort(Long.MAX_VALUE);
+        ScriptedPort negativeInsertion = new ScriptedPort(-1);
 
         assertEquals(100, EnergyTransfer.push(tooLarge, 100, 100));
-        assertEquals(0, EnergyTransfer.push(negativeSimulation, 100, 100));
         assertEquals(0, EnergyTransfer.push(negativeInsertion, 100, 100));
     }
 
@@ -173,23 +180,11 @@ class EnergyTransferTest {
         }
 
         @Override
-        public long simulateExtract(long requested) {
-            calls++;
-            return Math.min(stored, requested);
-        }
-
-        @Override
         public long extract(long requested) {
             calls++;
             long extracted = Math.min(stored, requested);
             stored -= extracted;
             return extracted;
-        }
-
-        @Override
-        public long simulateInsert(long offered) {
-            calls++;
-            return Math.min(capacity - stored, offered);
         }
 
         @Override
@@ -203,27 +198,15 @@ class EnergyTransferTest {
 
     private static final class ScriptedPort implements EnergyPort {
 
-        private final long simulated;
         private final long modulated;
 
-        private ScriptedPort(long simulated, long modulated) {
-            this.simulated = simulated;
+        private ScriptedPort(long modulated) {
             this.modulated = modulated;
-        }
-
-        @Override
-        public long simulateExtract(long requested) {
-            return simulated;
         }
 
         @Override
         public long extract(long requested) {
             return modulated;
-        }
-
-        @Override
-        public long simulateInsert(long offered) {
-            return simulated;
         }
 
         @Override
@@ -235,20 +218,13 @@ class EnergyTransferTest {
     private static final class PartialPort implements EnergyPort {
 
         private long stored;
-        private final long simulated;
         private final long modulated;
         private long lastExtractRequest = -1;
         private long lastInsertOffer = -1;
 
-        private PartialPort(long stored, long simulated, long modulated) {
+        private PartialPort(long stored, long modulated) {
             this.stored = stored;
-            this.simulated = simulated;
             this.modulated = modulated;
-        }
-
-        @Override
-        public long simulateExtract(long requested) {
-            return simulated;
         }
 
         @Override
@@ -256,11 +232,6 @@ class EnergyTransferTest {
             lastExtractRequest = requested;
             stored -= modulated;
             return modulated;
-        }
-
-        @Override
-        public long simulateInsert(long offered) {
-            return simulated;
         }
 
         @Override

@@ -408,6 +408,8 @@ Expected result:
   `20 * V[tier] * A` or the free local-buffer capacity, whichever is smaller.
 - For the dynamo hatch, `buffer loss = network gain`. The transferred amount is no greater than
   `20 * V[tier] * A` or the free EU-cell capacity, whichever is smaller.
+- Each attempted hatch transfer performs at most one AE storage extraction or insertion; no separate simulation pass
+  precedes the modulated operation.
 - When the network contains EU and the energy hatch has free local-buffer capacity, `mStoredEnergy` no longer remains
   permanently at zero.
 - The hatch active state follows its AE proxy within 20 ticks after both active and inactive transitions.

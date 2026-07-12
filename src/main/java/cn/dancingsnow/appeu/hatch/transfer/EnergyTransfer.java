@@ -10,11 +10,7 @@ public final class EnergyTransfer {
         }
 
         long requested = Math.min(capacity - stored, limit);
-        long simulated = clamp(source.simulateExtract(requested), requested);
-        if (simulated == 0) {
-            return 0;
-        }
-        return clamp(source.extract(simulated), simulated);
+        return clamp(source.extract(requested), requested);
     }
 
     public static long push(EnergyPort destination, long stored, long limit) {
@@ -23,11 +19,7 @@ public final class EnergyTransfer {
         }
 
         long offered = Math.min(stored, limit);
-        long simulated = clamp(destination.simulateInsert(offered), offered);
-        if (simulated == 0) {
-            return 0;
-        }
-        return clamp(destination.insert(simulated), simulated);
+        return clamp(destination.insert(offered), offered);
     }
 
     private static long clamp(long value, long maximum) {
