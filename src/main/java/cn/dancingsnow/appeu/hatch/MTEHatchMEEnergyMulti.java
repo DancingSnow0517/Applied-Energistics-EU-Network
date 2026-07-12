@@ -14,6 +14,7 @@ import appeng.me.helpers.AENetworkProxy;
 import appeng.me.helpers.IGridProxyable;
 import cn.dancingsnow.appeu.hatch.transfer.EnergyPort;
 import cn.dancingsnow.appeu.hatch.transfer.EnergyTransfer;
+import cn.dancingsnow.appeu.hatch.transfer.MEHatchTransferPolicy;
 import gregtech.api.enums.Textures;
 import gregtech.api.interfaces.IMEConnectable;
 import gregtech.api.interfaces.ITexture;
@@ -98,7 +99,7 @@ public class MTEHatchMEEnergyMulti extends MTEHatchEnergyMulti
 
     @Override
     public long maxEUStore() {
-        return Math.addExact(512L, Math.multiplyExact(Math.multiplyExact(V[mTier], 4L), fixedAmperage));
+        return MEHatchTransferPolicy.bufferCapacity(V[mTier], fixedAmperage);
     }
 
     @Override
@@ -108,15 +109,17 @@ public class MTEHatchMEEnergyMulti extends MTEHatchEnergyMulti
             return;
         }
 
-        long stored = getEUVar();
-        long capacity = maxEUStore();
-        if (stored < capacity) {
-            EnergyPort port = connection.energyPort();
-            if (port != null) {
-                long limit = Math.multiplyExact(V[mTier], (long) fixedAmperage);
-                long moved = EnergyTransfer.pull(port, stored, capacity, limit);
-                if (moved > 0) {
-                    setEUVar(Math.addExact(stored, moved));
+        if (tick == 1L || MEHatchTransferPolicy.shouldTransfer(tick)) {
+            long stored = getEUVar();
+            long capacity = maxEUStore();
+            if (stored < capacity) {
+                EnergyPort port = connection.energyPort();
+                if (port != null) {
+                    long limit = MEHatchTransferPolicy.batchSize(V[mTier], fixedAmperage);
+                    long moved = EnergyTransfer.pull(port, stored, capacity, limit);
+                    if (moved > 0) {
+                        setEUVar(Math.addExact(stored, moved));
+                    }
                 }
             }
         }

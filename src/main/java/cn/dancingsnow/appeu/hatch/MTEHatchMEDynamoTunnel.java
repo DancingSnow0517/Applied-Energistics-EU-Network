@@ -15,6 +15,7 @@ import appeng.me.helpers.AENetworkProxy;
 import appeng.me.helpers.IGridProxyable;
 import cn.dancingsnow.appeu.hatch.transfer.EnergyPort;
 import cn.dancingsnow.appeu.hatch.transfer.EnergyTransfer;
+import cn.dancingsnow.appeu.hatch.transfer.MEHatchTransferPolicy;
 import gregtech.api.interfaces.IMEConnectable;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
@@ -57,7 +58,7 @@ public class MTEHatchMEDynamoTunnel extends MTEHatchDynamoTunnel
 
     @Override
     public long maxEUStore() {
-        return Math.multiplyExact(Math.multiplyExact(V[mTier], 24L), (long) getAmperes());
+        return MEHatchTransferPolicy.bufferCapacity(V[mTier], getAmperes());
     }
 
     @Override
@@ -71,14 +72,15 @@ public class MTEHatchMEDynamoTunnel extends MTEHatchDynamoTunnel
             return;
         }
 
-        long stored = getEUVar();
-        if (stored > 0) {
-            EnergyPort port = connection.energyPort();
-            if (port != null) {
-                long limit = Math.multiplyExact(V[mTier], (long) getAmperes());
-                long moved = EnergyTransfer.push(port, stored, limit);
-                if (moved > 0) {
-                    setEUVar(Math.subtractExact(stored, moved));
+        if (MEHatchTransferPolicy.shouldTransfer(tick)) {
+            long stored = getEUVar();
+            if (stored > 0) {
+                EnergyPort port = connection.energyPort();
+                if (port != null) {
+                    long moved = EnergyTransfer.push(port, stored, stored);
+                    if (moved > 0) {
+                        setEUVar(Math.subtractExact(stored, moved));
+                    }
                 }
             }
         }

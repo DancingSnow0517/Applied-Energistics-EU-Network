@@ -138,14 +138,14 @@ Steps:
 1. Place an AE cable against each face in turn and rotate the hatch front where necessary.
 2. Observe cable connection and channel usage with the network powered and channel capacity available.
 3. Run a transfer, then make the node inactive by removing power or channel capacity without changing the GT side.
-4. Restore the network and confirm transfer resumes.
+4. Restore the network, cross the next 2,000-tick transfer boundary, and confirm transfer resumes.
 
 Expected result:
 
 - An AE cable connects only to the hatch's outward-facing front; all other faces reject it.
 - Each connected hatch consumes exactly one AE channel and 1 AE/t idle power.
 - An inactive or channel-starved node transfers zero EU and leaves the local buffer unchanged.
-- Transfer resumes without loss or duplication when the same node becomes active again.
+- Transfer resumes at the next scheduled boundary without loss or duplication when the same node becomes active again.
 
 Evidence / notes: ________________________________________________________________________________
 
@@ -158,13 +158,17 @@ Steps:
 1. At LV, IV, and UXV, test `2A`, `4A`, `16A`, and `64A` in both energy and dynamo directions.
 2. Use the 2A standard energy class, 4A/16A/64A multi-amp energy classes, 2A/4A standard dynamo classes, and 16A/64A
    multi-amp dynamo classes.
-3. Keep both source and destination able to sustain the requested rate, then measure EU moved during a known number of
-   ticks.
-4. Repeat with less EU available or less storage capacity to confirm the transfer is limited by the actual amount.
+3. Keep both source and destination able to sustain the requested rate, then measure machine-facing EU movement and
+   local-buffer changes over at least one 2,000-tick network-transfer interval.
+4. Observe an AE transfer boundary, then repeat with less EU available or less storage capacity to confirm the batch is
+   limited by the actual amount.
 
 Expected result:
 
-- For every tier/amperage/direction combination, the maximum transfer per tick is exactly `V[tier] * amperage` EU.
+- For every tier/amperage/direction combination, the machine-facing maximum per tick is exactly
+  `V[tier] * amperage` EU.
+- AE interaction is batched every 2,000 ticks. An energy hatch pulls at most `2,000 * V[tier] * amperage` per batch;
+  a dynamo hatch flushes the EU accumulated in its local buffer.
 - No hatch exceeds its declared limit, and partial availability/capacity transfers only the amount actually available.
 - Energy hatches move network EU into their local buffer; dynamo hatches move local-buffer EU into the network.
 
@@ -185,13 +189,11 @@ Expected result:
 
 | Hatch family | Expected local buffer |
 | --- | --- |
-| Standard 2A ME energy | `512 + 8 * V[tier]` |
-| Standard 2A ME dynamo | `512 + 2 * V[tier + 1]` |
-| Standard 4A ME dynamo | `512 + 16 * V[tier]` |
-| Multi-amp ME energy/dynamo | `512 + 4 * V[tier] * amperage` |
-| Laser ME energy/dynamo | `24 * V[tier] * currentAmperes` |
+| Standard ME energy/dynamo | `2 * 2,000 * V[tier] * amperage` |
+| Multi-amp ME energy/dynamo | `2 * 2,000 * V[tier] * amperage` |
+| Laser ME energy/dynamo | `2 * 2,000 * V[tier] * currentAmperes` |
 
-- Reported and observed capacities match exactly, including the standard-dynamo tier offset.
+- Reported and observed capacities match exactly and hold two complete AE transfer batches.
 - Laser capacity follows the current screwdriver-selected amperage, not merely the registered maximum.
 
 Evidence / notes: ________________________________________________________________________________
@@ -203,10 +205,12 @@ Evidence / notes: ______________________________________________________________
 Steps:
 
 1. Record `network EU + hatch buffer EU` before each transfer.
-2. For an energy hatch, make the network contain less EU than one tick's requested amount and measure the partial pull.
-3. For a dynamo hatch, leave less free cell capacity than one tick's offer and measure the partial push.
-4. Fill all EU storage completely, place EU in a dynamo buffer, and run several transfer ticks.
-5. Empty the network, leave free room in an energy hatch buffer, and run several transfer ticks.
+2. For an energy hatch, make the network contain less EU than one batch's requested amount and measure the partial pull
+   at the next 2,000-tick boundary.
+3. For a dynamo hatch, leave less free cell capacity than the buffered offer and measure the partial push at the next
+   2,000-tick boundary.
+4. Fill all EU storage completely, place EU in a dynamo buffer, and cross a transfer boundary.
+5. Empty the network, leave free room in an energy hatch buffer, and cross a transfer boundary.
 
 Expected result:
 
@@ -225,13 +229,15 @@ Evidence / notes: ______________________________________________________________
 Steps:
 
 1. Record EU cell contents and local hatch buffers while both an energy and a dynamo setup are idle.
-2. Disconnect the AE cable during attempted transfer, wait, reconnect it, and record all amounts.
+2. Disconnect the AE cable during an attempted transfer, wait, reconnect it, cross the next transfer boundary, and
+   record all amounts.
 3. Unload the chunks containing the network and hatches, reload them, and record all amounts again.
 4. Save and exit completely, restart the game, reload the world, and repeat transfers in both directions.
 
 Expected result:
 
-- Disconnecting stops transfer without clearing buffers; reconnecting creates no catch-up duplication.
+- Disconnecting stops transfer without clearing buffers; reconnecting resumes at a scheduled boundary without catch-up
+  duplication.
 - Chunk unload/reload and a full world restart preserve every cell amount and hatch-buffer amount exactly.
 - Across every transition, total EU is conserved and each AE node reconnects with one channel on the hatch front.
 
@@ -292,7 +298,7 @@ Steps:
 1. Place GT laser pipes against the front and every other face; also place a compatible GT laser endpoint beyond the
    pipe.
 2. Fill the source side, run several ticks, and record pipe/endpoint/hatch amounts.
-3. Connect the hatch front to AE normally and confirm AE transfer still works.
+3. Connect the hatch front to AE normally, cross a 2,000-tick boundary, and confirm AE transfer still works.
 4. Use a screwdriver to select `1A`, an intermediate current, and the registered maximum. At each setting, measure the
    throughput and local buffer.
 5. Save and reload the world, then perform a full game restart and check the selected amperage again.
@@ -301,8 +307,8 @@ Expected result:
 
 - ME laser hatches never connect to GT laser pipes and never send or receive EU through them on any face.
 - AE cable connection and AE-network transfer remain front-only and functional.
-- Screwdriver selection is clamped to `1..registered maximum`; throughput is `V[tier] * currentAmperes` and buffer is
-  `24 * V[tier] * currentAmperes`.
+- Screwdriver selection is clamped to `1..registered maximum`; machine-facing throughput is
+  `V[tier] * currentAmperes` per tick and the buffer is `2 * 2,000 * V[tier] * currentAmperes`.
 - The selected amperage survives chunk reload, world reload, and full game restart without resetting to the maximum.
 
 Evidence / notes: ________________________________________________________________________________
@@ -388,26 +394,27 @@ Steps:
    ME energy hatch under test, and the components required to keep AE power and its channel active. During the test,
    allow no other EU input, output, or storage mutation, and do not connect a multiblock that can consume the hatch's
    local buffer. With a recorded nonzero network EU amount and known tier, amperage, voltage, and initial free capacity
-   in the local buffer, record network EU and `mStoredEnergy`, disable all other changes for exactly 20 ticks, then record
-   both values again.
+   in the local buffer, record network EU and `mStoredEnergy` immediately before a 2,000-tick transfer boundary, cross
+   exactly one boundary, then record both values again.
 3. Prepare the same isolated network arrangement with the ME dynamo hatch under test, a known nonzero local buffer, and
    enough free capacity in the EU cell under test. Allow no other EU input, output, or storage mutation, and do not
    connect a source that can replenish the dynamo buffer. Record network EU, `mStoredEnergy`, and initial free EU-cell
-   capacity, disable all other changes for exactly 20 ticks, then record both amounts again.
+   capacity, record immediately before a 2,000-tick transfer boundary, cross exactly one boundary, then record both
+   amounts again.
 4. Switch each connected hatch between active and inactive network states by changing AE power or channel availability.
    Record how many ticks each state transition takes to appear on the hatch, allowing up to 20 ticks per transition.
 5. Use the same GT per-Meta-ID debug/profiler metric for the same hatch on the affected old build and the new build.
    Record the profiler/tool, metric, and unit (`ns/tick`, or the unit actually shown by the tool), and use identical
-   warmup and sample windows with at least 100 sample ticks. For the old-build baseline, use an existing screenshot or
+   warmup and sample windows with at least 4,000 sample ticks. For the old-build baseline, use an existing screenshot or
    record, or a backed-up disposable world; do not risk an unbacked world. Record average and worst load for both builds
    and capture the first fatal exception and stack trace, if any, from each corresponding log interval.
 
 Expected result:
 
 - For the energy hatch, `buffer gain = network loss`. The transferred amount is no greater than
-  `20 * V[tier] * A` or the free local-buffer capacity, whichever is smaller.
-- For the dynamo hatch, `buffer loss = network gain`. The transferred amount is no greater than
-  `20 * V[tier] * A` or the free EU-cell capacity, whichever is smaller.
+  `2,000 * V[tier] * A`, available network EU, or free local-buffer capacity, whichever is smallest.
+- For the dynamo hatch, `buffer loss = network gain`. The transferred amount is no greater than the initial local-buffer
+  amount or free EU-cell capacity, whichever is smaller.
 - Each attempted hatch transfer performs at most one AE storage extraction or insertion; no separate simulation pass
   precedes the modulated operation.
 - When the network contains EU and the energy hatch has free local-buffer capacity, `mStoredEnergy` no longer remains
@@ -427,13 +434,13 @@ Evidence / notes:
 - Energy initial free local-buffer capacity: ____________________
 - Energy network EU before / after: ____________________ / ____________________
 - Energy buffer EU before / after: ____________________ / ____________________
-- Energy calculated bound (`min(20 * V[tier] * A, free buffer)`): ____________________
+- Energy calculated bound (`min(2,000 * V[tier] * A, network EU, free buffer)`): ____________________
 - Energy conserved (`buffer gain = network loss`): [ ] Yes  [ ] No
 - Dynamo hatch tier / A / `V[tier]`: ____________________
 - Dynamo initial free EU-cell capacity: ____________________
 - Dynamo network EU before / after: ____________________ / ____________________
 - Dynamo buffer EU before / after: ____________________ / ____________________
-- Dynamo calculated bound (`min(20 * V[tier] * A, free cell capacity)`): ____________________
+- Dynamo calculated bound (`min(initial buffer, free cell capacity)`): ____________________
 - Dynamo conserved (`buffer loss = network gain`): [ ] Yes  [ ] No
 - Energy active transition latency (ticks): ____________________
 - Energy inactive transition latency (ticks): ____________________
@@ -442,7 +449,7 @@ Evidence / notes:
 - CPU profiler/tool: ____________________
 - CPU metric / unit: ____________________ / ____________________
 - Affected old build/hash: ____________________
-- Old-build warmup / sample ticks (minimum 100 sample ticks): ____________________ / ____________________
+- Old-build warmup / sample ticks (minimum 4,000 sample ticks): ____________________ / ____________________
 - Old-build CPU average / worst: ____________________ / ____________________
 - Old-build first fatal exception / stack trace: ___________________________________________________
 - New-build warmup / sample ticks (same windows): ____________________ / ____________________
