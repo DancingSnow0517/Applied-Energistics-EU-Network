@@ -372,9 +372,61 @@ Evidence / notes:
 - Duplicate result: ____________________
 - General notes: _________________________________________________________________________________
 
+## 14. Signed EU Transfer Regression, Active State, And CPU Load
+
+- [ ] Pass  [ ] Fail  [ ] Blocked
+
+Steps:
+
+1. Back up the test world before loading either build. Treat any world previously opened with an affected old build as
+   potentially modified: the network may already have had EU deducted before the negative-amount exception occurred.
+2. On the new build, prepare an active, channel-enabled ME network with a recorded nonzero EU amount. Connect one ME
+   energy hatch with known tier, amperage, voltage, and free local-buffer capacity. Record network EU and
+   `mStoredEnergy`, run exactly 20 ticks, then record both values again.
+3. Prepare an ME dynamo hatch with a known nonzero local buffer and enough free capacity in an EU cell. Record network
+   EU and `mStoredEnergy`, run exactly 20 ticks, then record both values again.
+4. Switch each connected hatch between active and inactive network states by changing AE power or channel availability.
+   Record how many ticks each state transition takes to appear on the hatch, allowing up to 20 ticks per transition.
+5. After a warmup period, sample the same connected hatch for at least 100 ticks. Record average and worst CPU load and
+   capture the first exception, if any, from the corresponding log interval.
+
+Expected result:
+
+- For the energy hatch, `buffer gain = network loss`. The transferred amount is no greater than
+  `20 * V[tier] * A` or the free local-buffer capacity, whichever is smaller.
+- For the dynamo hatch, `buffer loss = network gain`. The transferred amount is no greater than
+  `20 * V[tier] * A` or the free EU-cell capacity, whichever is smaller.
+- When the network contains EU and the energy hatch has free local-buffer capacity, `mStoredEnergy` no longer remains
+  permanently at zero.
+- The hatch active state follows its AE proxy within 20 ticks after both active and inactive transitions.
+- The sampled log contains no `EU amount cannot be negative` exception.
+- After warmup, the hatch no longer causes repeated exception-driven CPU spikes. Record measured CPU values without
+  applying a hardware-independent pass/fail threshold.
+
+Evidence / notes:
+
+- Build/hash: ____________________
+- Energy hatch tier / A / `V[tier]`: ____________________
+- Energy network EU before / after: ____________________ / ____________________
+- Energy buffer EU before / after: ____________________ / ____________________
+- Energy calculated bound (`min(20 * V[tier] * A, free buffer)`): ____________________
+- Energy conserved (`buffer gain = network loss`): [ ] Yes  [ ] No
+- Dynamo hatch tier / A / `V[tier]`: ____________________
+- Dynamo network EU before / after: ____________________ / ____________________
+- Dynamo buffer EU before / after: ____________________ / ____________________
+- Dynamo calculated bound (`min(20 * V[tier] * A, free cell capacity)`): ____________________
+- Dynamo conserved (`buffer loss = network gain`): [ ] Yes  [ ] No
+- Active transition latency (ticks): ____________________
+- Inactive transition latency (ticks): ____________________
+- CPU warmup ticks: ____________________
+- CPU sample ticks (minimum 100): ____________________
+- CPU average / worst: ____________________ / ____________________
+- Exception log result / first exception: _________________________________________________________
+- Notes: _________________________________________________________________________________________
+
 ## Final Result
 
-- [ ] All 13 sections passed, including terminal presentation and creative-tab contents
+- [ ] All 14 sections passed, including signed EU transfer, active-state, and CPU-load regression checks
 - [ ] Logs, measurements, and screenshots are attached to the test record
 - [ ] The test configuration was restored and the disposable conflict fixture was removed
 
