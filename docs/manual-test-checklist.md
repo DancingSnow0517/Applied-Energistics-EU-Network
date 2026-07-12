@@ -380,15 +380,23 @@ Steps:
 
 1. Back up the test world before loading either build. Treat any world previously opened with an affected old build as
    potentially modified: the network may already have had EU deducted before the negative-amount exception occurred.
-2. On the new build, prepare an active, channel-enabled ME network with a recorded nonzero EU amount. Connect one ME
-   energy hatch with known tier, amperage, voltage, and free local-buffer capacity. Record network EU and
-   `mStoredEnergy`, run exactly 20 ticks, then record both values again.
-3. Prepare an ME dynamo hatch with a known nonzero local buffer and enough free capacity in an EU cell. Record network
-   EU and `mStoredEnergy`, run exactly 20 ticks, then record both values again.
+2. On the new build, prepare an isolated, active, channel-enabled ME network containing only the EU cell under test, the
+   ME energy hatch under test, and the components required to keep AE power and its channel active. During the test,
+   allow no other EU input, output, or storage mutation, and do not connect a multiblock that can consume the hatch's
+   local buffer. With a recorded nonzero network EU amount and known tier, amperage, voltage, and initial free capacity
+   in the local buffer, record network EU and `mStoredEnergy`, disable all other changes for exactly 20 ticks, then record
+   both values again.
+3. Prepare the same isolated network arrangement with the ME dynamo hatch under test, a known nonzero local buffer, and
+   enough free capacity in the EU cell under test. Allow no other EU input, output, or storage mutation, and do not
+   connect a source that can replenish the dynamo buffer. Record network EU, `mStoredEnergy`, and initial free EU-cell
+   capacity, disable all other changes for exactly 20 ticks, then record both amounts again.
 4. Switch each connected hatch between active and inactive network states by changing AE power or channel availability.
    Record how many ticks each state transition takes to appear on the hatch, allowing up to 20 ticks per transition.
-5. After a warmup period, sample the same connected hatch for at least 100 ticks. Record average and worst CPU load and
-   capture the first fatal exception, if any, from the corresponding log interval.
+5. Use the same GT per-Meta-ID debug/profiler metric for the same hatch on the affected old build and the new build.
+   Record the profiler/tool, metric, and unit (`ns/tick`, or the unit actually shown by the tool), and use identical
+   warmup and sample windows with at least 100 sample ticks. For the old-build baseline, use an existing screenshot or
+   record, or a backed-up disposable world; do not risk an unbacked world. Record average and worst load for both builds
+   and capture the first fatal exception and stack trace, if any, from each corresponding log interval.
 
 Expected result:
 
@@ -399,29 +407,39 @@ Expected result:
 - When the network contains EU and the energy hatch has free local-buffer capacity, `mStoredEnergy` no longer remains
   permanently at zero.
 - The hatch active state follows its AE proxy within 20 ticks after both active and inactive transitions.
-- The sampled log contains no `EU amount cannot be negative` exception.
-- After warmup, the hatch no longer causes repeated exception-driven CPU spikes. Record measured CPU values without
-  applying a hardware-independent pass/fail threshold.
+- The new-build sampled log contains no `EU amount cannot be negative` exception.
+- Under the same profiler conditions, the new build no longer causes exception-driven repeated CPU spikes and its
+  measured load falls significantly relative to the affected old-build baseline. Evaluate the relative comparison and
+  log result without applying an absolute, hardware-independent millisecond threshold.
 
 Evidence / notes:
 
-- Build/hash: ____________________
+- New build/hash: ____________________
+- Isolated network components / mutation controls: __________________________________________________
 - Energy hatch tier / A / `V[tier]`: ____________________
+- Energy initial free local-buffer capacity: ____________________
 - Energy network EU before / after: ____________________ / ____________________
 - Energy buffer EU before / after: ____________________ / ____________________
 - Energy calculated bound (`min(20 * V[tier] * A, free buffer)`): ____________________
 - Energy conserved (`buffer gain = network loss`): [ ] Yes  [ ] No
 - Dynamo hatch tier / A / `V[tier]`: ____________________
+- Dynamo initial free EU-cell capacity: ____________________
 - Dynamo network EU before / after: ____________________ / ____________________
 - Dynamo buffer EU before / after: ____________________ / ____________________
 - Dynamo calculated bound (`min(20 * V[tier] * A, free cell capacity)`): ____________________
 - Dynamo conserved (`buffer loss = network gain`): [ ] Yes  [ ] No
 - Active transition latency (ticks): ____________________
 - Inactive transition latency (ticks): ____________________
-- CPU warmup ticks: ____________________
-- CPU sample ticks (minimum 100): ____________________
-- CPU average / worst: ____________________ / ____________________
-- Exception log result / first fatal exception: ___________________________________________________
+- CPU profiler/tool: ____________________
+- CPU metric / unit: ____________________ / ____________________
+- Affected old build/hash: ____________________
+- Old-build warmup / sample ticks (minimum 100 sample ticks): ____________________ / ____________________
+- Old-build CPU average / worst: ____________________ / ____________________
+- Old-build first fatal exception / stack trace: ___________________________________________________
+- New-build warmup / sample ticks (same windows): ____________________ / ____________________
+- New-build CPU average / worst: ____________________ / ____________________
+- New-build exception result / first fatal exception / stack trace: _________________________________
+- Old/new CPU comparison: _________________________________________________________________________
 - Notes: _________________________________________________________________________________________
 
 ## Final Result
