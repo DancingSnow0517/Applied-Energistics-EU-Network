@@ -45,19 +45,44 @@ class EUStackTest {
     }
 
     @Test
-    void rejectsNegativeAmountsAndOverflow() {
-        assertThrows(IllegalArgumentException.class, () -> new EUStack(-1));
-        assertThrows(IllegalArgumentException.class, () -> new EUStack(1).setStackSize(-1));
-        assertThrows(IllegalArgumentException.class, () -> new EUStack(1).decStackSize(2));
-        assertThrows(IllegalArgumentException.class, () -> new EUStack(1).incStackSize(-1));
-        assertThrows(IllegalArgumentException.class, () -> new EUStack(1).decStackSize(-1));
+    void supportsSignedNetworkChangeDeltas() {
+        EUStack delta = new EUStack(-40);
+
+        assertTrue(delta.isMeaningful());
+        assertEquals(-40, delta.getStackSize());
+        assertEquals(-20, delta.setStackSize(-20).getStackSize());
+
+        delta.incStackSize(5);
+        assertEquals(-15, delta.getStackSize());
+        delta.decStackSize(-5);
+        assertEquals(-10, delta.getStackSize());
+        delta.add(new EUStack(15));
+        assertEquals(5, delta.getStackSize());
+    }
+
+    @Test
+    void keepsCheckedArithmeticForSignedAmounts() {
         assertThrows(ArithmeticException.class, () -> new EUStack(Long.MAX_VALUE).incStackSize(1));
+        assertThrows(ArithmeticException.class, () -> new EUStack(Long.MIN_VALUE).decStackSize(1));
         assertThrows(ArithmeticException.class, () -> new EUStack(Long.MAX_VALUE).add(new EUStack(1)));
     }
 
     @Test
     void roundTripsLongAmountThroughNbt() {
         long amount = (long) Integer.MAX_VALUE + 42;
+        NBTTagCompound tag = new NBTTagCompound();
+
+        new EUStack(amount).writeToNBT(tag);
+
+        assertEquals(
+            amount,
+            EUStack.fromNBT(tag)
+                .getStackSize());
+    }
+
+    @Test
+    void roundTripsNegativeDeltaThroughNbt() {
+        long amount = -((long) Integer.MAX_VALUE + 42);
         NBTTagCompound tag = new NBTTagCompound();
 
         new EUStack(amount).writeToNBT(tag);
@@ -83,6 +108,20 @@ class EUStackTest {
     }
 
     @Test
+    void roundTripsNegativeDeltaThroughPacket() throws Exception {
+        long amount = -((long) Integer.MAX_VALUE + 42);
+        ByteBuf buffer = Unpooled.buffer();
+
+        new EUStack(amount).writeToPacket(buffer);
+
+        assertEquals(
+            amount,
+            EUStack.fromPacket(buffer)
+                .getStackSize());
+        assertEquals(0, buffer.readableBytes());
+    }
+
+    @Test
     void equalityRepresentsTheSingleEuIdentity() {
         EUStack small = new EUStack(1);
         EUStack large = new EUStack(1_000_000);
@@ -96,7 +135,7 @@ class EUStackTest {
     }
 
     @Test
-    void onlyPositiveStoredAmountIsMeaningful() {
+    void zeroAmountRemainsNonMeaningful() {
         assertFalse(new EUStack(0).isMeaningful());
         assertTrue(new EUStack(1).isMeaningful());
         assertFalse(

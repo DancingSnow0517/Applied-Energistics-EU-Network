@@ -31,7 +31,7 @@ public final class EUStack implements IAEStack<EUStack> {
     private long amount;
 
     public EUStack(long amount) {
-        setStackSize(amount);
+        this.amount = amount;
     }
 
     public static EUStack fromNBT(NBTTagCompound tag) {
@@ -56,7 +56,6 @@ public final class EUStack implements IAEStack<EUStack> {
 
     @Override
     public EUStack setStackSize(long stackSize) {
-        requireNonNegative(stackSize);
         amount = stackSize;
         return this;
     }
@@ -89,19 +88,17 @@ public final class EUStack implements IAEStack<EUStack> {
 
     @Override
     public boolean isMeaningful() {
-        return amount > 0;
+        return amount != 0;
     }
 
     @Override
     public void incStackSize(long delta) {
-        requireNonNegative(delta);
         amount = Math.addExact(amount, delta);
     }
 
     @Override
     public void decStackSize(long delta) {
-        requireNonNegative(delta);
-        setStackSize(Math.subtractExact(amount, delta));
+        amount = Math.subtractExact(amount, delta);
     }
 
     @Override
@@ -282,9 +279,4 @@ public final class EUStack implements IAEStack<EUStack> {
         return EUConstants.STACK_TYPE_ID.hashCode();
     }
 
-    private static void requireNonNegative(long value) {
-        if (value < 0) {
-            throw new IllegalArgumentException("EU amount cannot be negative: " + value);
-        }
-    }
 }

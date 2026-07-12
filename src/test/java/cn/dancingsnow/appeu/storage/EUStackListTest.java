@@ -62,6 +62,29 @@ class EUStackListTest {
     }
 
     @Test
+    void appliesSignedDeltasAndDropsAnExactZeroAggregate() {
+        EUStackList list = new EUStackList();
+        list.addStorage(new EUStack(100));
+
+        list.add(new EUStack(-40));
+        assertEquals(60, list.getFirstItem().getStackSize());
+
+        list.addRequestable(new EUStack(-60));
+        assertTrue(list.isEmpty());
+        assertNull(list.getFirstItem());
+    }
+
+    @Test
+    void standaloneNegativeDeltaRemainsMeaningfulAndIterable() {
+        EUStackList list = new EUStackList();
+        list.add(new EUStack(-25));
+
+        assertFalse(list.isEmpty());
+        assertEquals(-25, list.getFirstItem().getStackSize());
+        assertEquals(-25, list.iterator().next().getStackSize());
+    }
+
+    @Test
     void ignoresNullAndNonMeaningfulStacks() {
         EUStackList list = new EUStackList();
 
