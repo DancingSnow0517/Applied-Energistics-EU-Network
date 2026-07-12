@@ -42,5 +42,6 @@ dependencies {
     runtimeOnlyNonPublishable(gtnh290.angelica) { artifact { classifier = "dev" } }
 
     testImplementation("org.junit.jupiter:junit-jupiter:5.12.2")
+    testRuntimeOnly("it.unimi.dsi:fastutil:8.5.18")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
