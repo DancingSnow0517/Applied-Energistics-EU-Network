@@ -1,3 +1,6 @@
+# Creative tab
+itemGroup.appeu=应用能源：EU 网络
+
 # EU storage items
 item.appeu.eu_energy_display.name=EU 能源
 item.appeu.eu_storage_component_1k.name=1k EU 存储组件

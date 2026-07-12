@@ -1,3 +1,6 @@
+# Creative tab
+itemGroup.appeu=Applied Energistics: EU Network
+
 # EU storage items
 item.appeu.eu_energy_display.name=EU Energy
 item.appeu.eu_storage_component_1k.name=1k EU Storage Component

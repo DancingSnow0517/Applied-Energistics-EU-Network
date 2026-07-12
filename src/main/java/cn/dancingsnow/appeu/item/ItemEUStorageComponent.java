@@ -3,11 +3,11 @@ package cn.dancingsnow.appeu.item;
 import java.util.List;
 
 import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 
+import cn.dancingsnow.appeu.registry.ModCreativeTab;
 import cn.dancingsnow.appeu.storage.EUCellTier;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -22,7 +22,7 @@ public class ItemEUStorageComponent extends Item {
         this.setHasSubtypes(true);
         this.setMaxDamage(0);
         this.setUnlocalizedName("appeu.eu_storage_component");
-        this.setCreativeTab(CreativeTabs.tabMaterials);
+        this.setCreativeTab(ModCreativeTab.INSTANCE);
     }
 
     @Override
@@ -49,7 +49,7 @@ public class ItemEUStorageComponent extends Item {
     @Override
     @SideOnly(Side.CLIENT)
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    public void getSubItems(Item item, CreativeTabs creativeTab, List itemStacks) {
+    public void getSubItems(Item item, net.minecraft.creativetab.CreativeTabs creativeTab, List itemStacks) {
         for (EUCellTier tier : EUCellTier.values()) {
             itemStacks.add(new ItemStack(item, 1, tier.meta()));
         }

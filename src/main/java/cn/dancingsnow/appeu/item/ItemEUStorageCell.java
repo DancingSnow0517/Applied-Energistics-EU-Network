@@ -3,7 +3,6 @@ package cn.dancingsnow.appeu.item;
 import java.util.List;
 
 import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
@@ -25,6 +24,7 @@ import appeng.api.storage.data.IItemList;
 import appeng.items.AEBaseCell;
 import appeng.util.InventoryAdaptor;
 import appeng.util.IterationCounter;
+import cn.dancingsnow.appeu.registry.ModCreativeTab;
 import cn.dancingsnow.appeu.registry.ModItems;
 import cn.dancingsnow.appeu.storage.EUCellTier;
 import cn.dancingsnow.appeu.storage.EUConstants;
@@ -45,7 +45,7 @@ public class ItemEUStorageCell extends AEBaseCell {
         this.setMaxStackSize(1);
         this.setNoRepair();
         this.setUnlocalizedName("appeu.eu_storage_cell");
-        this.setCreativeTab(CreativeTabs.tabMisc);
+        this.setCreativeTab(ModCreativeTab.INSTANCE);
     }
 
     @Override
@@ -70,7 +70,8 @@ public class ItemEUStorageCell extends AEBaseCell {
     }
 
     @Override
-    protected void getCheckedSubItems(Item item, CreativeTabs creativeTab, List<ItemStack> itemStacks) {
+    protected void getCheckedSubItems(Item item, net.minecraft.creativetab.CreativeTabs creativeTab,
+        List<ItemStack> itemStacks) {
         for (EUCellTier tier : EUCellTier.values()) {
             itemStacks.add(new ItemStack(item, 1, tier.meta()));
         }
