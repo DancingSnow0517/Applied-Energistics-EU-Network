@@ -20,7 +20,10 @@
         "gregtech",
         "appliedenergistics2"
       ],
-      "dependencies": [],
+      "dependencies": [
+        "gregtech",
+        "appliedenergistics2"
+      ],
       "dependants": [],
       "useDependencyInformation": true
     }
