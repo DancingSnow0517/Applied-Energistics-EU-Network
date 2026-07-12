@@ -9,6 +9,8 @@ import cn.dancingsnow.appeu.storage.cell.EUCellHandler;
 
 public final class StorageRegistration {
 
+    private static boolean cellHandlerRegistered;
+
     private StorageRegistration() {}
 
     public static void registerStackType() {
@@ -21,10 +23,14 @@ public final class StorageRegistration {
         }
     }
 
-    public static void registerCellHandler() {
+    public static synchronized void registerCellHandler() {
+        if (cellHandlerRegistered) {
+            return;
+        }
         AEApi.instance()
             .registries()
             .cell()
             .addCellHandler(EUCellHandler.INSTANCE);
+        cellHandlerRegistered = true;
     }
 }

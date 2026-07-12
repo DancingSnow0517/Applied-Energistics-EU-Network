@@ -49,7 +49,7 @@ public final class EUCellHandler implements ICellHandler {
             return new EUCellInventoryHandler(new EUCellInventory(cellItem, container));
         } catch (AppEngException exception) {
             AppEU.LOG.error("Failed to open EU storage cell inventory for {}", cellItem, exception);
-        } catch (IllegalArgumentException exception) {
+        } catch (IllegalArgumentException | ArithmeticException exception) {
             AppEU.LOG.warn("Ignoring EU storage cell with malformed data: {}", cellItem, exception);
         }
         return null;

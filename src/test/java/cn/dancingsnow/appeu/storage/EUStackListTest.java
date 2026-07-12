@@ -2,8 +2,10 @@ package cn.dancingsnow.appeu.storage;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Collection;
@@ -119,15 +121,69 @@ class EUStackListTest {
                 .getStackSize());
 
         record.decStackSize(6);
-        assertEquals(
-            0,
-            list.findPrecise(new EUStack(1))
-                .getStackSize());
+        assertNull(list.findPrecise(new EUStack(1)));
         assertFalse(
             list.iterator()
                 .hasNext());
         assertEquals(0, list.size());
         assertNull(list.findPrecise(new EUStack(1)));
+    }
+
+    @Test
+    void allQueryEntrypointsCleanAZeroedBackingRecord() {
+        EUStackList list = zeroedList();
+        assertEquals(0, list.size());
+
+        list = zeroedList();
+        assertTrue(list.isEmpty());
+        assertEquals(0, list.size());
+
+        list = zeroedList();
+        assertNull(list.findPrecise(new EUStack(1)));
+        assertEquals(0, list.size());
+
+        list = zeroedList();
+        assertTrue(
+            list.findFuzzy(new EUStack(1), FuzzyMode.IGNORE_ALL)
+                .isEmpty());
+        assertEquals(0, list.size());
+
+        list = zeroedList();
+        assertNull(list.getFirstItem());
+        assertEquals(0, list.size());
+
+        list = zeroedList();
+        Iterator<EUStack> iterator = list.iterator();
+        assertEquals(0, list.size());
+        assertFalse(iterator.hasNext());
+    }
+
+    @Test
+    void zeroAmountInputDoesNotCreateARecord() {
+        EUStackList list = new EUStackList();
+
+        list.add(new EUStack(0));
+        list.addStorage(new EUStack(0));
+        list.addRequestable(new EUStack(0));
+
+        assertEquals(0, list.size());
+        assertNull(list.findPrecise(new EUStack(1)));
+    }
+
+    @Test
+    void iteratorNextWithoutHasNextReturnsTheMutableBackingRecord() {
+        EUStackList list = new EUStackList();
+        list.addStorage(new EUStack(17));
+
+        EUStack iterated = list.iterator()
+            .next();
+
+        assertSame(list.findPrecise(new EUStack(1)), iterated);
+        iterated.incStackSize(3);
+        assertEquals(
+            20,
+            list.findPrecise(new EUStack(1))
+                .getStackSize());
     }
 
     @Test
@@ -163,9 +219,11 @@ class EUStackListTest {
         list.addStorage(new EUStack(17));
 
         Iterator<EUStack> iterator = list.iterator();
+        assertThrows(IllegalStateException.class, iterator::remove);
         assertTrue(iterator.hasNext());
         iterator.next();
         iterator.remove();
+        assertThrows(IllegalStateException.class, iterator::remove);
 
         assertFalse(iterator.hasNext());
         assertTrue(list.isEmpty());
@@ -174,7 +232,37 @@ class EUStackListTest {
     }
 
     @Test
+    void mergeOverflowIsReportedAsMalformedEuWithContext() {
+        EUStackList list = new EUStackList();
+        list.addStorage(new EUStack(Long.MAX_VALUE));
+
+        IllegalArgumentException exception = assertThrows(
+            IllegalArgumentException.class,
+            () -> list.addStorage(new EUStack(1)));
+
+        assertTrue(
+            exception.getMessage()
+                .contains(Long.toString(Long.MAX_VALUE)));
+        assertTrue(
+            exception.getMessage()
+                .contains("1"));
+        assertInstanceOf(ArithmeticException.class, exception.getCause());
+        assertEquals(
+            Long.MAX_VALUE,
+            list.findPrecise(new EUStack(1))
+                .getStackSize());
+    }
+
+    @Test
     void reportsEuStackType() {
         assertSame(EUStackType.INSTANCE, new EUStackList().getStackType());
+    }
+
+    private static EUStackList zeroedList() {
+        EUStackList list = new EUStackList();
+        list.addStorage(new EUStack(10));
+        list.findPrecise(new EUStack(1))
+            .setStackSize(0);
+        return list;
     }
 }
