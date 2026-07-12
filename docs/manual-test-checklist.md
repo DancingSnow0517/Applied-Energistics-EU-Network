@@ -388,7 +388,7 @@ Steps:
 4. Switch each connected hatch between active and inactive network states by changing AE power or channel availability.
    Record how many ticks each state transition takes to appear on the hatch, allowing up to 20 ticks per transition.
 5. After a warmup period, sample the same connected hatch for at least 100 ticks. Record average and worst CPU load and
-   capture the first exception, if any, from the corresponding log interval.
+   capture the first fatal exception, if any, from the corresponding log interval.
 
 Expected result:
 
@@ -421,7 +421,7 @@ Evidence / notes:
 - CPU warmup ticks: ____________________
 - CPU sample ticks (minimum 100): ____________________
 - CPU average / worst: ____________________ / ____________________
-- Exception log result / first exception: _________________________________________________________
+- Exception log result / first fatal exception: ___________________________________________________
 - Notes: _________________________________________________________________________________________
 
 ## Final Result
