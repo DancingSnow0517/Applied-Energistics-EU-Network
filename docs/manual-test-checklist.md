@@ -317,11 +317,18 @@ Steps:
    their quantity formatting.
 3. Open this mod's creative tab and count the storage components, EU cells, and default registered hatches separately.
    Record the first and last entry of each group and check the complete group ordering.
-4. Search the creative inventory for the hidden EU Energy display item by name and by browsing every entry in the mod
-   tab.
-5. In a disposable instance, invoke one additional `registerLaserSeries` call during the correct GT registration phase,
-   then start the game and open the mod tab. Refresh or close and reopen the creative inventory before recounting all
-   entries and checking for duplicate stacks.
+4. Browse every entry in this mod's creative tab and confirm the hidden EU Energy display item is absent from that tab.
+5. In a disposable copy or branch, first confirm MetaTileEntity IDs `27158..27175` are free when the configured start is
+   the default `27000`. In `CommonProxy.preInit`, immediately after the default `registerAll` call, temporarily add:
+
+   ```java
+   HatchRegistration.registerLaserSeries(Config.metaTileEntityIdStart + 158, 16_384);
+   ```
+
+6. Build a temporary test jar from that disposable copy or branch, start the game, and refresh or close and reopen the
+   creative inventory. Recount the mod tab and check the added entries for duplicates.
+7. After testing, remove the temporary call and restore the test configuration. This call is a manual-test fixture only;
+   do not commit it to production code.
 
 Expected result:
 
@@ -331,12 +338,33 @@ Expected result:
   `1,000,000,000,000` use `K`, `M`, `G`, and `T`, respectively, with the same value, rounding, spacing, and suffix
   behavior as native AE2 stacks.
 - The unmodified mod tab contains exactly 8 storage components, followed by exactly 8 EU cells, followed by exactly
-  158 default hatches. No entry appears outside its group, and the hidden EU Energy display item does not appear.
-- The extra `registerLaserSeries` call runs in the correct GT registration phase. After refreshing or reopening the
-  creative inventory, exactly 18 additional hatches appear, and no component, cell, default hatch, or added hatch is
-  duplicated.
+  158 default hatches. No entry appears outside its group, and the hidden EU Energy display item does not appear in this
+  mod's creative tab.
+- The temporary `registerLaserSeries` call runs during the correct GT registration phase. With the default start, it
+  registers exactly 18 additional `16384A` laser hatches at IDs `27158..27175`. After refreshing or reopening the
+  creative inventory, all 18 appear in the mod tab, and no component, cell, default hatch, or added hatch is duplicated.
 
-Evidence / notes: ________________________________________________________________________________
+Evidence / notes:
+
+- English tooltip title: ____________________
+- Simplified Chinese tooltip title: ____________________
+
+| AE2 terminal font size | ~1,000 (`K`) | ~1,000,000 (`M`) | ~1,000,000,000 (`G`) | ~1,000,000,000,000 (`T`) | Matches native stacks? |
+| --- | --- | --- | --- | --- | --- |
+| ____________________ | ____________________ | ____________________ | ____________________ | ____________________ | ____________________ |
+| ____________________ | ____________________ | ____________________ | ____________________ | ____________________ | ____________________ |
+| ____________________ | ____________________ | ____________________ | ____________________ | ____________________ | ____________________ |
+
+- Base component count: ________
+- Base cell count: ________
+- Base default-hatch count: ________
+- Base group order (components/cells/hatches): ____________________
+- Hidden EU Energy display item absent from mod tab: [ ] Yes  [ ] No
+- Extra-series IDs: ____________________
+- Extra-series amperage: ____________________
+- Extra-series hatch count: ________
+- Duplicate result: ____________________
+- General notes: _________________________________________________________________________________
 
 ## Final Result
 
