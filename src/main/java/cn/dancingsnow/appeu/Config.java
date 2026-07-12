@@ -4,6 +4,7 @@ import java.io.File;
 
 import net.minecraftforge.common.config.Configuration;
 
+import cn.dancingsnow.appeu.hatch.HatchSpecs;
 import gregtech.api.GregTechAPI;
 
 public class Config {
@@ -18,8 +19,9 @@ public class Config {
             Configuration.CATEGORY_GENERAL,
             metaTileEntityIdStart,
             1,
-            GregTechAPI.MAXIMUM_METATILE_IDS - 158,
-            "Starting MetaTileEntity ID for the contiguous 158-ID default ME hatch matrix.");
+            GregTechAPI.MAXIMUM_METATILE_IDS - HatchSpecs.DEFAULT_HATCH_COUNT,
+            "Starting MetaTileEntity ID for the contiguous " + HatchSpecs.DEFAULT_HATCH_COUNT
+                + "-ID default ME hatch matrix.");
 
         if (configuration.hasChanged()) {
             configuration.save();

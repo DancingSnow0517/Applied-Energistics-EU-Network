@@ -215,6 +215,14 @@ public final class HatchRegistration {
 
     private static String regionalName(HatchSpec spec) {
         StringBuilder name = new StringBuilder().append(VN[spec.tier()]);
+        if (spec.family() == HatchFamily.LASER) {
+            return name.append(' ')
+                .append(spec.amperage())
+                .append("A ME Laser ")
+                .append(spec.direction() == HatchDirection.ENERGY ? "Target" : "Source")
+                .append(" Hatch")
+                .toString();
+        }
         if (spec.amperage() != 2) {
             name.append(' ')
                 .append(spec.amperage())
@@ -222,9 +230,6 @@ public final class HatchRegistration {
         }
         name.append(" ME ")
             .append(spec.direction() == HatchDirection.ENERGY ? "Energy" : "Dynamo");
-        if (spec.family() == HatchFamily.LASER) {
-            name.append(" Laser");
-        }
         return name.append(" Hatch")
             .toString();
     }

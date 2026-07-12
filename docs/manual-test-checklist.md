@@ -31,16 +31,16 @@ Before testing:
 
 Steps:
 
-1. Set `metaTileEntityIdStart=27000` and start the game with all IDs `27000..27157` free.
-2. Confirm startup completes and the log reports 158 registered ME energy hatches starting at ID 27000.
+1. Set `metaTileEntityIdStart=27000` and start the game with all IDs `27000..27229` free.
+2. Confirm startup completes and the log reports 230 registered ME energy hatches starting at ID 27000.
 3. Close the game. In a disposable profile, use a test fixture or another addon to occupy one ID inside
-   `27000..27157` before this mod registers its hatches.
+   `27000..27229` before this mod registers its hatches.
 4. Start the game again and capture the first registration error.
 5. Remove the deliberate conflict and restore the original configuration before continuing.
 
 Expected result:
 
-- The conflict-free run owns exactly the contiguous range `27000..27157`.
+- The conflict-free run owns exactly the contiguous range `27000..27229`.
 - The conflicting run aborts registration before entering a world. The error identifies the occupied ID and the
   generated hatch specification/name that attempted to use it.
 - No later ID in this mod's range is silently substituted and no conflicting machine is replaced.
@@ -60,9 +60,10 @@ Steps:
 
 Expected result:
 
-- NEI contains exactly 158 hatches: 104 standard/multi-amp and 54 laser.
+- NEI contains exactly 230 hatches: 104 standard/multi-amp and 126 laser.
 - Standard/multi-amp hatches cover LV through UXV at `2A`, `4A`, `16A`, and `64A`, in both directions.
-- Laser hatches cover IV through UXV at `256A`, `1024A`, and `4096A`, in both directions; no LV-EV laser variant exists.
+- Laser hatches cover IV through UXV at `256A`, `1024A`, `4096A`, `16384A`, `65536A`, `262144A`, and
+  `1048576A`, in both directions; no LV-EV laser variant exists.
 - Every entry has the correct tier, amperage, direction, localized name, and matching standard/multi/laser overlay.
 
 Evidence / notes: ________________________________________________________________________________
@@ -267,12 +268,13 @@ Evidence / notes: ______________________________________________________________
 Steps:
 
 1. Use a multiblock whose structure accepts ordinary `HatchElement.Energy` but no exotic or laser energy element.
-2. Attempt formation with every ME laser energy hatch: IV through UXV at `256A`, `1024A`, and `4096A`.
+2. Attempt formation with every ME laser target hatch: IV through UXV at `256A`, `1024A`, `4096A`, `16384A`,
+   `65536A`, `262144A`, and `1048576A`.
 3. Replace the laser hatch with a valid ordinary 2A ME energy hatch as a control.
 
 Expected result:
 
-- All 27 laser energy variants are rejected and cannot satisfy the ordinary energy-hatch requirement.
+- All 63 laser target variants are rejected and cannot satisfy the ordinary energy-hatch requirement.
 - The control ordinary ME energy hatch is accepted, proving rejection is caused by hatch classification rather than the
   test structure.
 
@@ -318,11 +320,12 @@ Steps:
 3. Open this mod's creative tab and count the storage components, EU cells, and default registered hatches separately.
    Record the first and last entry of each group and check the complete group ordering.
 4. Browse every entry in this mod's creative tab and confirm the hidden EU Energy display item is absent from that tab.
-5. In a disposable copy or branch, first confirm MetaTileEntity IDs `27158..27175` are free when the configured start is
-   the default `27000`. In `CommonProxy.preInit`, immediately after the default `registerAll` call, temporarily add:
+5. In a disposable copy or branch, first confirm MetaTileEntity IDs `27230..27247` are free when the configured start is
+   the default `27000`. In `CommonProxy`, temporarily import `HatchSpecs`, then in `preInit` immediately after the default
+   `registerAll` call add:
 
    ```java
-   HatchRegistration.registerLaserSeries(Config.metaTileEntityIdStart + 158, 16_384);
+   HatchRegistration.registerLaserSeries(Config.metaTileEntityIdStart + HatchSpecs.DEFAULT_HATCH_COUNT, 2_097_152);
    ```
 
 6. Build a temporary test jar from that disposable copy or branch, start the game, and refresh or close and reopen the
@@ -338,10 +341,10 @@ Expected result:
   `1,000,000,000,000` use `K`, `M`, `G`, and `T`, respectively, with the same value, rounding, spacing, and suffix
   behavior as native AE2 stacks.
 - The unmodified mod tab contains exactly 8 storage components, followed by exactly 8 EU cells, followed by exactly
-  158 default hatches. No entry appears outside its group, and the hidden EU Energy display item does not appear in this
+  230 default hatches. No entry appears outside its group, and the hidden EU Energy display item does not appear in this
   mod's creative tab.
 - The temporary `registerLaserSeries` call runs during the correct GT registration phase. With the default start, it
-  registers exactly 18 additional `16384A` laser hatches at IDs `27158..27175`. After refreshing or reopening the
+  registers exactly 18 additional `2097152A` laser hatches at IDs `27230..27247`. After refreshing or reopening the
   creative inventory, all 18 appear in the mod tab, and no component, cell, default hatch, or added hatch is duplicated.
 
 Evidence / notes:

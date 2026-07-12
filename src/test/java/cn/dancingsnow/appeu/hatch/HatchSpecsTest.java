@@ -18,14 +18,14 @@ class HatchSpecsTest {
     void createsDefaultProductMatrix() {
         List<HatchSpec> specs = HatchSpecs.create(27_000);
 
-        assertEquals(158, specs.size());
+        assertEquals(230, specs.size());
         assertEquals(
             104,
             specs.stream()
                 .filter(spec -> spec.family() != HatchFamily.LASER)
                 .count());
         assertEquals(
-            54,
+            126,
             specs.stream()
                 .filter(spec -> spec.family() == HatchFamily.LASER)
                 .count());
@@ -34,7 +34,7 @@ class HatchSpecsTest {
             specs.get(0)
                 .id());
         assertEquals(
-            27_157,
+            27_229,
             specs.get(specs.size() - 1)
                 .id());
     }
@@ -44,7 +44,7 @@ class HatchSpecsTest {
         List<HatchSpec> specs = HatchSpecs.create(27_000);
         String[] tierLabels = { "lv", "mv", "hv", "ev", "iv", "luv", "zpm", "uv", "uhv", "uev", "uiv", "umv", "uxv" };
         int[] standardAmperages = { 2, 4, 16, 64 };
-        int[] laserAmperages = { 256, 1_024, 4_096 };
+        int[] laserAmperages = { 256, 1_024, 4_096, 16_384, 65_536, 262_144, 1_048_576 };
         HatchDirection[] directions = { HatchDirection.DYNAMO, HatchDirection.ENERGY };
         int index = 0;
 
@@ -97,7 +97,7 @@ class HatchSpecsTest {
             laserSeries.stream()
                 .allMatch(spec -> spec.tier() >= 5 && spec.tier() <= 13));
         assertEquals(
-            asSet(256, 1_024, 4_096),
+            asSet(256, 1_024, 4_096, 16_384, 65_536, 262_144, 1_048_576),
             laserSeries.stream()
                 .map(HatchSpec::amperage)
                 .collect(java.util.stream.Collectors.toSet()));
@@ -105,16 +105,17 @@ class HatchSpecsTest {
 
     @Test
     void appendsCustomLaserAmperagesInCallerOrder() {
-        List<HatchSpec> specs = HatchSpecs.create(27_000, 256, 1_024, 4_096, 16_384);
+        List<HatchSpec> specs = HatchSpecs.create(27_000, 256, 1_024, 4_096, 2_097_152);
+        int appendedSeriesStart = 104 + 3 * 18;
 
-        assertEquals(176, specs.size());
+        assertEquals(appendedSeriesStart + 18, specs.size());
         assertTrue(
-            specs.subList(158, 176)
+            specs.subList(appendedSeriesStart, specs.size())
                 .stream()
-                .allMatch(spec -> spec.amperage() == 16_384 && spec.tier() >= 5));
+                .allMatch(spec -> spec.amperage() == 2_097_152 && spec.tier() >= 5));
         assertEquals(
-            "appeu.hatch.dynamo.iv.16384a",
-            specs.get(158)
+            "appeu.hatch.dynamo.iv.2097152a",
+            specs.get(appendedSeriesStart)
                 .name());
     }
 
