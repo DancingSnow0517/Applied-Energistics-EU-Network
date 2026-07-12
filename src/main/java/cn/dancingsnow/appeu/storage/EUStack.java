@@ -222,7 +222,16 @@ public final class EUStack implements IAEStack<EUStack> {
     @Override
     @SideOnly(Side.CLIENT)
     public void drawOnBlockFace(World world) {
-        drawIcon(Minecraft.getMinecraft(), 0, 0);
+        GL11.glPushMatrix();
+        try {
+            GL11.glTranslatef(0, -0.04F, 0);
+            GL11.glScalef(1.0F / 42.0F, 1.0F / 42.0F, 1.0F / 42.0F);
+            GL11.glTranslated(-8.0, -10.2, -10.4);
+            GL11.glScalef(1.0F, 1.0F, 0.005F);
+            drawIcon(Minecraft.getMinecraft(), 0, 0);
+        } finally {
+            GL11.glPopMatrix();
+        }
     }
 
     @SideOnly(Side.CLIENT)
