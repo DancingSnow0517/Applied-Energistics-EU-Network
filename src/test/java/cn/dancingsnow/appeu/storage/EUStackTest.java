@@ -50,7 +50,10 @@ class EUStackTest {
 
         assertTrue(delta.isMeaningful());
         assertEquals(-40, delta.getStackSize());
-        assertEquals(-20, delta.setStackSize(-20).getStackSize());
+        assertEquals(
+            -20,
+            delta.setStackSize(-20)
+                .getStackSize());
 
         delta.incStackSize(5);
         assertEquals(-15, delta.getStackSize());

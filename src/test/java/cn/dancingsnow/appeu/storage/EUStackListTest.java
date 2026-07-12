@@ -67,7 +67,10 @@ class EUStackListTest {
         list.addStorage(new EUStack(100));
 
         list.add(new EUStack(-40));
-        assertEquals(60, list.getFirstItem().getStackSize());
+        assertEquals(
+            60,
+            list.getFirstItem()
+                .getStackSize());
 
         list.addRequestable(new EUStack(-60));
         assertTrue(list.isEmpty());
@@ -80,8 +83,15 @@ class EUStackListTest {
         list.add(new EUStack(-25));
 
         assertFalse(list.isEmpty());
-        assertEquals(-25, list.getFirstItem().getStackSize());
-        assertEquals(-25, list.iterator().next().getStackSize());
+        assertEquals(
+            -25,
+            list.getFirstItem()
+                .getStackSize());
+        assertEquals(
+            -25,
+            list.iterator()
+                .next()
+                .getStackSize());
     }
 
     @Test
