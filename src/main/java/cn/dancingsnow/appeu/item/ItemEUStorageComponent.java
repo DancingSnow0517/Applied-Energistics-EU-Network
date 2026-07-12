@@ -27,7 +27,8 @@ public class ItemEUStorageComponent extends Item {
 
     @Override
     public String getUnlocalizedName(ItemStack stack) {
-        return UNLOCALIZED_NAME + "_" + tierOrDefault(stack).suffix();
+        EUCellTier tier = tierOrNull(stack);
+        return tier == null ? UNLOCALIZED_NAME + ".invalid" : UNLOCALIZED_NAME + "_" + tier.suffix();
     }
 
     @Override
@@ -42,7 +43,7 @@ public class ItemEUStorageComponent extends Item {
     @Override
     @SideOnly(Side.CLIENT)
     public IIcon getIconFromDamage(int metadata) {
-        return this.icons[tierOrDefault(metadata).meta()];
+        return this.icons[iconTier(metadata).meta()];
     }
 
     @Override
@@ -54,15 +55,20 @@ public class ItemEUStorageComponent extends Item {
         }
     }
 
-    private static EUCellTier tierOrDefault(ItemStack stack) {
-        return stack == null ? EUCellTier.K1 : tierOrDefault(stack.getItemDamage());
+    private static EUCellTier tierOrNull(ItemStack stack) {
+        return stack == null ? null : tierOrNull(stack.getItemDamage());
     }
 
-    private static EUCellTier tierOrDefault(int metadata) {
+    private static EUCellTier tierOrNull(int metadata) {
         try {
             return EUCellTier.fromMeta(metadata);
         } catch (IllegalArgumentException ignored) {
-            return EUCellTier.K1;
+            return null;
         }
+    }
+
+    private static EUCellTier iconTier(int metadata) {
+        EUCellTier tier = tierOrNull(metadata);
+        return tier == null ? EUCellTier.K1 : tier;
     }
 }

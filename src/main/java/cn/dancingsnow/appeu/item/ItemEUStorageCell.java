@@ -50,7 +50,8 @@ public class ItemEUStorageCell extends AEBaseCell {
 
     @Override
     public String getUnlocalizedName(ItemStack stack) {
-        return UNLOCALIZED_NAME + "_" + tierOrDefault(stack).suffix();
+        EUCellTier tier = tierOrNull(stack);
+        return tier == null ? UNLOCALIZED_NAME + ".invalid" : UNLOCALIZED_NAME + "_" + tier.suffix();
     }
 
     @Override
@@ -65,7 +66,7 @@ public class ItemEUStorageCell extends AEBaseCell {
     @Override
     @SideOnly(Side.CLIENT)
     public IIcon getIconFromDamage(int metadata) {
-        return this.icons[tierOrDefault(metadata).meta()];
+        return this.icons[iconTier(metadata).meta()];
     }
 
     @Override
@@ -77,7 +78,8 @@ public class ItemEUStorageCell extends AEBaseCell {
 
     @Override
     public long getBytesLong(ItemStack cellItem) {
-        return tierOrDefault(cellItem).totalBytes();
+        EUCellTier tier = tierOrNull(cellItem);
+        return tier == null ? 0 : tier.totalBytes();
     }
 
     @Override
@@ -97,12 +99,13 @@ public class ItemEUStorageCell extends AEBaseCell {
 
     @Override
     public int getTotalTypes(ItemStack cellItem) {
-        return EUConstants.TOTAL_TYPES;
+        return tierOrNull(cellItem) == null ? 0 : EUConstants.TOTAL_TYPES;
     }
 
     @Override
     public double getIdleDrain(ItemStack cellItem) {
-        return tierOrDefault(cellItem).idleDrain();
+        EUCellTier tier = tierOrNull(cellItem);
+        return tier == null ? 0 : tier.idleDrain();
     }
 
     @Override
@@ -128,10 +131,10 @@ public class ItemEUStorageCell extends AEBaseCell {
 
     @Override
     public CellData getCellData(ItemStack stack) {
-        EUCellTier tier = tierOrDefault(stack);
+        EUCellTier tier = tierOrNull(stack);
         return new CellData(
-            tier.totalBytes(),
-            EUConstants.TOTAL_TYPES,
+            tier == null ? 0 : tier.totalBytes(),
+            tier == null ? 0 : EUConstants.TOTAL_TYPES,
             EUConstants.BYTES_PER_TYPE,
             Math.toIntExact(EUConstants.EU_PER_BYTE));
     }
@@ -221,12 +224,11 @@ public class ItemEUStorageCell extends AEBaseCell {
         }
     }
 
-    private static EUCellTier tierOrDefault(ItemStack stack) {
-        EUCellTier tier = stack == null ? null : tierOrNull(stack.getItemDamage());
-        return tier == null ? EUCellTier.K1 : tier;
+    private static EUCellTier tierOrNull(ItemStack stack) {
+        return stack == null ? null : tierOrNull(stack.getItemDamage());
     }
 
-    private static EUCellTier tierOrDefault(int metadata) {
+    private static EUCellTier iconTier(int metadata) {
         EUCellTier tier = tierOrNull(metadata);
         return tier == null ? EUCellTier.K1 : tier;
     }
