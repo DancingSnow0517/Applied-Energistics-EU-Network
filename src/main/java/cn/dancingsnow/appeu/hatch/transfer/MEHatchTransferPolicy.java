@@ -2,8 +2,8 @@ package cn.dancingsnow.appeu.hatch.transfer;
 
 public final class MEHatchTransferPolicy {
 
-    // Matches GT5U WirelessNetworkManager.ticks_between_energy_addition.
-    public static final long TICKS_BETWEEN_TRANSFERS = 2_000L;
+    // Uses GT-style batching with a shorter cadence for long-backed AE storage.
+    public static final long TICKS_BETWEEN_TRANSFERS = 20L;
     private static final long BUFFERED_BATCHES = 2L;
 
     private MEHatchTransferPolicy() {}
