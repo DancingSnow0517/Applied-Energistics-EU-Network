@@ -304,9 +304,43 @@ Expected result:
 
 Evidence / notes: ________________________________________________________________________________
 
+## 13. Terminal Presentation And Creative Tab Contents
+
+- [ ] Pass  [ ] Fail  [ ] Blocked
+
+Steps:
+
+1. Open AE2's unified terminal with stored EU, hover its EU entry, and record the title in both English and Simplified
+   Chinese.
+2. At each AE2 terminal font-size setting, test stored amounts close to `1,000`, `1,000,000`, `1,000,000,000`, and
+   `1,000,000,000,000`. Place native item stacks with equivalent displayed magnitudes beside the EU entry and compare
+   their quantity formatting.
+3. Open this mod's creative tab and count the storage components, EU cells, and default registered hatches separately.
+   Record the first and last entry of each group and check the complete group ordering.
+4. Search the creative inventory for the hidden EU Energy display item by name and by browsing every entry in the mod
+   tab.
+5. In a disposable instance, invoke one additional `registerLaserSeries` call during the correct GT registration phase,
+   then start the game and open the mod tab. Refresh or close and reopen the creative inventory before recounting all
+   entries and checking for duplicate stacks.
+
+Expected result:
+
+- The unified terminal hover title is `EU Energy` in English and `EU 能源` in Simplified Chinese. It never shows a
+  storage-component name or title.
+- At every AE2 terminal font-size setting, amounts around `1,000`, `1,000,000`, `1,000,000,000`, and
+  `1,000,000,000,000` use `K`, `M`, `G`, and `T`, respectively, with the same value, rounding, spacing, and suffix
+  behavior as native AE2 stacks.
+- The unmodified mod tab contains exactly 8 storage components, followed by exactly 8 EU cells, followed by exactly
+  158 default hatches. No entry appears outside its group, and the hidden EU Energy display item does not appear.
+- The extra `registerLaserSeries` call runs in the correct GT registration phase. After refreshing or reopening the
+  creative inventory, exactly 18 additional hatches appear, and no component, cell, default hatch, or added hatch is
+  duplicated.
+
+Evidence / notes: ________________________________________________________________________________
+
 ## Final Result
 
-- [ ] All 12 sections passed
+- [ ] All 13 sections passed, including terminal presentation and creative-tab contents
 - [ ] Logs, measurements, and screenshots are attached to the test record
 - [ ] The test configuration was restored and the disposable conflict fixture was removed
 
