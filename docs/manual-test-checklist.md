@@ -356,8 +356,14 @@ Evidence / notes:
 | ____________________ | ____________________ | ____________________ | ____________________ | ____________________ | ____________________ |
 
 - Base component count: ________
+- Component first entry: ____________________
+- Component last entry: ____________________
 - Base cell count: ________
+- Cell first entry: ____________________
+- Cell last entry: ____________________
 - Base default-hatch count: ________
+- Default hatch first entry: ____________________
+- Default hatch last entry: ____________________
 - Base group order (components/cells/hatches): ____________________
 - Hidden EU Energy display item absent from mod tab: [ ] Yes  [ ] No
 - Extra-series IDs: ____________________
