@@ -19,7 +19,7 @@ item.appeu.eu_storage_cell_16384k.name=16384k EU 存储单元
 item.appeu.eu_storage_cell.invalid.name=无效的 EU 存储单元
 
 # EU stack
-appeu.stack.eu=EU 能量
+appeu.stack.eu=EU 能源
 
 # Hatch descriptions
 appeu.hatch.energy.desc=从 ME 网络向本地缓存输入 EU\n本地缓存：%s EU\n消耗 1 AE/t\n占用 1 个 ME 频道
