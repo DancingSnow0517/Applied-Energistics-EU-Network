@@ -73,23 +73,23 @@ public final class HatchRegistration {
 
     private static List<HatchSpec> createDefaultSpecs(int start) {
         if (start <= 0) {
-            throw invalidSpec(start, "HatchSpecs.create", "start id must be positive", null);
+            throw invalidRequest(start, "HatchSpecs.create", "start id must be positive", null);
         }
         try {
             return HatchSpecs.create(start);
         } catch (RuntimeException exception) {
-            throw invalidSpec(start, "HatchSpecs.create", "could not create the default hatch matrix", exception);
+            throw invalidRequest(start, "HatchSpecs.create", "could not create the default hatch matrix", exception);
         }
     }
 
     private static List<HatchSpec> createLaserSpecs(int startId, int amperage) {
         if (startId <= 0) {
-            throw invalidSpec(startId, "HatchSpecs.createLaserSeries", "start id must be positive", null);
+            throw invalidRequest(startId, "HatchSpecs.createLaserSeries", "start id must be positive", null);
         }
         try {
             return HatchSpecs.createLaserSeries(startId, amperage);
         } catch (RuntimeException exception) {
-            throw invalidSpec(
+            throw invalidRequest(
                 startId,
                 "HatchSpecs.createLaserSeries(" + amperage + "A)",
                 "could not create the laser hatch series",
@@ -99,13 +99,13 @@ public final class HatchRegistration {
 
     private static void validateAll(List<HatchSpec> specs) {
         if (specs.isEmpty()) {
-            throw invalidSpec(-1, "<empty HatchSpecs>", "registration contains no hatches", null);
+            throw invalidRequest(-1, "<empty HatchSpecs>", "registration contains no hatches", null);
         }
 
         HatchSpec first = specs.get(0);
         long end = (long) first.id() + specs.size() - 1L;
         if (end > Integer.MAX_VALUE) {
-            throw invalidSpec(first.id(), first.name(), "ending id overflows int: " + end, null);
+            throw invalidSpec(first, "ending id overflows int: " + end, null);
         }
 
         Set<Integer> ids = new HashSet<>();
@@ -114,16 +114,12 @@ public final class HatchRegistration {
             HatchSpec spec = specs.get(index);
             long expectedId = (long) first.id() + index;
             if (spec.id() != expectedId) {
-                throw invalidSpec(
-                    spec.id(),
-                    spec.name(),
-                    "non-contiguous id at index " + index + ", expected " + expectedId,
-                    null);
+                throw invalidSpec(spec, "non-contiguous id at index " + index + ", expected " + expectedId, null);
             }
             validateSpec(spec, ids, names);
         }
         if (!GregTechAPI.sPreloadStarted || GregTechAPI.sPostloadStarted) {
-            throw invalidSpec(first.id(), first.name(), "GregTech is not in its MetaTileEntity load phase", null);
+            throw invalidSpec(first, "GregTech is not in its MetaTileEntity load phase", null);
         }
     }
 
@@ -131,31 +127,26 @@ public final class HatchRegistration {
         int id = spec.id();
         String name = spec.name();
         if (id < 0 || id >= GregTechAPI.MAXIMUM_METATILE_IDS) {
-            throw invalidSpec(id, name, "id must be in [0, " + GregTechAPI.MAXIMUM_METATILE_IDS + ")", null);
+            throw invalidSpec(spec, "id must be in [0, " + GregTechAPI.MAXIMUM_METATILE_IDS + ")", null);
         }
         if (id >= GregTechAPI.METATILEENTITIES.length) {
-            throw invalidSpec(
-                id,
-                name,
-                "id exceeds METATILEENTITIES length " + GregTechAPI.METATILEENTITIES.length,
-                null);
+            throw invalidSpec(spec, "id exceeds METATILEENTITIES length " + GregTechAPI.METATILEENTITIES.length, null);
         }
         if (!ids.add(id)) {
-            throw invalidSpec(id, name, "duplicate id in registration request", null);
+            throw invalidSpec(spec, "duplicate id in registration request", null);
         }
         if (!names.add(name)) {
-            throw invalidSpec(id, name, "duplicate name in registration request", null);
+            throw invalidSpec(spec, "duplicate name in registration request", null);
         }
         if (REGISTERED_IDS.containsKey(id)) {
-            throw invalidSpec(id, name, "id is already owned by " + REGISTERED_IDS.get(id), null);
+            throw invalidSpec(spec, "id is already owned by " + REGISTERED_IDS.get(id), null);
         }
         if (REGISTERED_HATCHES.containsKey(name)) {
-            throw invalidSpec(id, name, "name is already registered by this registrar", null);
+            throw invalidSpec(spec, "name is already registered by this registrar", null);
         }
         if (GregTechAPI.METATILEENTITIES[id] != null) {
             throw invalidSpec(
-                id,
-                name,
+                spec,
                 "global slot is occupied by " + GregTechAPI.METATILEENTITIES[id].getMetaName(),
                 null);
         }
@@ -177,8 +168,7 @@ public final class HatchRegistration {
             } catch (RuntimeException | LinkageError exception) {
                 int occupiedInRequest = countOccupiedSlots(specs);
                 throw invalidSpec(
-                    spec.id(),
-                    spec.name(),
+                    spec,
                     "construction failed with " + occupiedInRequest
                         + " occupied slots in this request; occupied slots were not rolled back",
                     exception);
@@ -220,7 +210,7 @@ public final class HatchRegistration {
             }
             return new MTEHatchMEDynamoTunnel(spec.id(), spec.name(), regionalName, spec.tier(), spec.amperage());
         }
-        throw invalidSpec(spec.id(), spec.name(), "unsupported hatch family " + family, null);
+        throw invalidSpec(spec, "unsupported hatch family " + family, null);
     }
 
     private static String regionalName(HatchSpec spec) {
@@ -255,7 +245,12 @@ public final class HatchRegistration {
         return Collections.unmodifiableMap(copy);
     }
 
-    private static IllegalStateException invalidSpec(int id, String name, String reason, Throwable cause) {
+    private static IllegalStateException invalidSpec(HatchSpec spec, String reason, Throwable cause) {
+        String message = "Cannot register " + spec + ": " + reason;
+        return cause == null ? new IllegalStateException(message) : new IllegalStateException(message, cause);
+    }
+
+    private static IllegalStateException invalidRequest(int id, String name, String reason, Throwable cause) {
         String message = "Cannot register hatch id " + id + " (" + name + "): " + reason;
         return cause == null ? new IllegalStateException(message) : new IllegalStateException(message, cause);
     }
