@@ -11,7 +11,7 @@ public enum EUCellTier {
     K4096(6, "4096k", 4096, 3.5),
     K16384(7, "16384k", 16384, 4.0);
 
-    private static final EUCellTier[] VALUES = values();
+    private static final EUCellTier[] BY_META = buildByMeta();
 
     private final int meta;
     private final String suffix;
@@ -46,9 +46,29 @@ public enum EUCellTier {
     }
 
     public static EUCellTier fromMeta(int meta) {
-        if (meta < 0 || meta >= VALUES.length) {
+        if (meta < 0 || meta >= BY_META.length) {
             throw new IllegalArgumentException("Unknown EU cell tier metadata: " + meta);
         }
-        return VALUES[meta];
+        return BY_META[meta];
+    }
+
+    private static EUCellTier[] buildByMeta() {
+        EUCellTier[] tiers = values();
+        EUCellTier[] byMeta = new EUCellTier[tiers.length];
+        for (EUCellTier tier : tiers) {
+            if (tier.meta < 0 || tier.meta >= byMeta.length) {
+                throw new IllegalStateException("EU cell tier metadata out of range: " + tier.meta);
+            }
+            if (byMeta[tier.meta] != null) {
+                throw new IllegalStateException("Duplicate EU cell tier metadata: " + tier.meta);
+            }
+            byMeta[tier.meta] = tier;
+        }
+        for (int meta = 0; meta < byMeta.length; meta++) {
+            if (byMeta[meta] == null) {
+                throw new IllegalStateException("Missing EU cell tier metadata: " + meta);
+            }
+        }
+        return byMeta;
     }
 }
