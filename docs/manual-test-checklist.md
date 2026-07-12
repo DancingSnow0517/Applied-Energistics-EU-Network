@@ -64,6 +64,7 @@ Expected result:
 - Standard/multi-amp hatches cover LV through UXV at `2A`, `4A`, `16A`, and `64A`, in both directions.
 - Laser hatches cover IV through UXV at `256A`, `1024A`, `4096A`, `16384A`, `65536A`, `262144A`, and
   `1048576A`, in both directions; no LV-EV laser variant exists.
+- Within each amperage group, all dynamo/source tiers appear from lowest to highest before all energy/target tiers.
 - Every entry has the correct tier, amperage, direction, localized name, and matching standard/multi/laser overlay.
 
 Evidence / notes: ________________________________________________________________________________

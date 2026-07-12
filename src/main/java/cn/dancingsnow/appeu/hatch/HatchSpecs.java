@@ -32,8 +32,8 @@ public final class HatchSpecs {
 
         List<HatchSpec> specs = new ArrayList<>();
         for (int amperage : STANDARD_AMPERAGES) {
-            for (int tier = 1; tier <= TIER_LABELS.length; tier++) {
-                for (HatchDirection direction : DIRECTIONS) {
+            for (HatchDirection direction : DIRECTIONS) {
+                for (int tier = 1; tier <= TIER_LABELS.length; tier++) {
                     add(specs, start, tier, amperage, direction);
                 }
             }
@@ -51,8 +51,8 @@ public final class HatchSpecs {
         validateLaserAmperage(amperage);
 
         List<HatchSpec> specs = new ArrayList<>();
-        for (int tier = 5; tier <= TIER_LABELS.length; tier++) {
-            for (HatchDirection direction : DIRECTIONS) {
+        for (HatchDirection direction : DIRECTIONS) {
+            for (int tier = 5; tier <= TIER_LABELS.length; tier++) {
                 add(specs, startId, tier, amperage, direction);
             }
         }

@@ -40,7 +40,7 @@ class HatchSpecsTest {
     }
 
     @Test
-    void groupsByAmperageThenTierThenDynamoBeforeEnergy() {
+    void groupsByAmperageThenDirectionThenTier() {
         List<HatchSpec> specs = HatchSpecs.create(27_000);
         String[] tierLabels = { "lv", "mv", "hv", "ev", "iv", "luv", "zpm", "uv", "uhv", "uev", "uiv", "umv", "uxv" };
         int[] standardAmperages = { 2, 4, 16, 64 };
@@ -49,15 +49,15 @@ class HatchSpecsTest {
         int index = 0;
 
         for (int amperage : standardAmperages) {
-            for (int tier = 1; tier <= tierLabels.length; tier++) {
-                for (HatchDirection direction : directions) {
+            for (HatchDirection direction : directions) {
+                for (int tier = 1; tier <= tierLabels.length; tier++) {
                     assertSpec(specs.get(index++), tierLabels[tier - 1], tier, amperage, direction);
                 }
             }
         }
         for (int amperage : laserAmperages) {
-            for (int tier = 5; tier <= tierLabels.length; tier++) {
-                for (HatchDirection direction : directions) {
+            for (HatchDirection direction : directions) {
+                for (int tier = 5; tier <= tierLabels.length; tier++) {
                     assertSpec(specs.get(index++), tierLabels[tier - 1], tier, amperage, direction);
                 }
             }
