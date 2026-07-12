@@ -28,21 +28,18 @@ public final class HatchSpecs {
         validateLaserAmperages(laserAmperages);
 
         List<HatchSpec> specs = new ArrayList<>();
-        Set<String> names = new HashSet<>();
         for (int tier = 1; tier <= TIER_LABELS.length; tier++) {
             for (int amperage : STANDARD_AMPERAGES) {
                 for (HatchDirection direction : DIRECTIONS) {
-                    add(specs, names, start, tier, amperage, direction);
+                    add(specs, start, tier, amperage, direction);
                 }
             }
         }
         for (int amperage : laserAmperages) {
-            for (int tier = 5; tier <= TIER_LABELS.length; tier++) {
-                for (HatchDirection direction : DIRECTIONS) {
-                    add(specs, names, start, tier, amperage, direction);
-                }
-            }
+            int seriesStart = Math.addExact(start, specs.size());
+            specs.addAll(createLaserSeries(seriesStart, amperage));
         }
+        validateUniqueNames(specs);
         return Collections.unmodifiableList(specs);
     }
 
@@ -51,10 +48,9 @@ public final class HatchSpecs {
         validateLaserAmperage(amperage);
 
         List<HatchSpec> specs = new ArrayList<>();
-        Set<String> names = new HashSet<>();
         for (int tier = 5; tier <= TIER_LABELS.length; tier++) {
             for (HatchDirection direction : DIRECTIONS) {
-                add(specs, names, startId, tier, amperage, direction);
+                add(specs, startId, tier, amperage, direction);
             }
         }
         return Collections.unmodifiableList(specs);
@@ -69,13 +65,9 @@ public final class HatchSpecs {
         return amperage > standardMaximum ? HatchFamily.MULTI_AMP : HatchFamily.STANDARD;
     }
 
-    private static void add(List<HatchSpec> specs, Set<String> names, int start, int tier, int amperage,
-        HatchDirection direction) {
+    private static void add(List<HatchSpec> specs, int start, int tier, int amperage, HatchDirection direction) {
         int id = Math.addExact(start, specs.size());
         String name = name(direction, tier, amperage);
-        if (!names.add(name)) {
-            throw new IllegalArgumentException("Duplicate hatch name: " + name);
-        }
         specs.add(new HatchSpec(id, name, tier, amperage, direction, family(direction, amperage)));
     }
 
@@ -91,11 +83,16 @@ public final class HatchSpecs {
     }
 
     private static void validateLaserAmperages(int[] amperages) {
-        Set<Integer> unique = new HashSet<>();
         for (int amperage : amperages) {
             validateLaserAmperage(amperage);
-            if (!unique.add(amperage)) {
-                throw new IllegalArgumentException("Duplicate laser amperage: " + amperage);
+        }
+    }
+
+    private static void validateUniqueNames(List<HatchSpec> specs) {
+        Set<String> names = new HashSet<>();
+        for (HatchSpec spec : specs) {
+            if (!names.add(spec.name())) {
+                throw new IllegalArgumentException("Duplicate hatch name: " + spec.name());
             }
         }
     }

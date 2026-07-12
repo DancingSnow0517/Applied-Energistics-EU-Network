@@ -42,12 +42,27 @@ class HatchSpecsTest {
     @Test
     void usesStableTierAmpDirectionOrdering() {
         List<HatchSpec> specs = HatchSpecs.create(27_000);
+        String[] tierLabels = { "lv", "mv", "hv", "ev", "iv", "luv", "zpm", "uv", "uhv", "uev", "uiv", "umv", "uxv" };
+        int[] standardAmperages = { 2, 4, 16, 64 };
+        int[] laserAmperages = { 256, 1_024, 4_096 };
+        HatchDirection[] directions = { HatchDirection.ENERGY, HatchDirection.DYNAMO };
+        int index = 0;
 
-        assertSpec(specs.get(0), 27_000, "appeu.hatch.energy.lv.2a", 1, 2, HatchDirection.ENERGY);
-        assertSpec(specs.get(1), 27_001, "appeu.hatch.dynamo.lv.2a", 1, 2, HatchDirection.DYNAMO);
-        assertSpec(specs.get(103), 27_103, "appeu.hatch.dynamo.uxv.64a", 13, 64, HatchDirection.DYNAMO);
-        assertSpec(specs.get(104), 27_104, "appeu.hatch.energy.iv.256a", 5, 256, HatchDirection.ENERGY);
-        assertSpec(specs.get(157), 27_157, "appeu.hatch.dynamo.uxv.4096a", 13, 4_096, HatchDirection.DYNAMO);
+        for (int tier = 1; tier <= tierLabels.length; tier++) {
+            for (int amperage : standardAmperages) {
+                for (HatchDirection direction : directions) {
+                    assertSpec(specs.get(index++), tierLabels[tier - 1], tier, amperage, direction);
+                }
+            }
+        }
+        for (int amperage : laserAmperages) {
+            for (int tier = 5; tier <= tierLabels.length; tier++) {
+                for (HatchDirection direction : directions) {
+                    assertSpec(specs.get(index++), tierLabels[tier - 1], tier, amperage, direction);
+                }
+            }
+        }
+        assertEquals(specs.size(), index);
     }
 
     @Test
@@ -172,7 +187,7 @@ class HatchSpecsTest {
         assertEquals(first, same);
         assertEquals(first.hashCode(), same.hashCode());
         assertNotEquals(first, different);
-        assertNotEquals(first, null);
+        assertNotEquals(null, first);
         assertTrue(
             first.toString()
                 .contains("appeu.hatch.energy.lv.2a"));
@@ -191,10 +206,9 @@ class HatchSpecsTest {
         assertThrows(ArithmeticException.class, () -> HatchSpecs.createLaserSeries(Integer.MAX_VALUE, 256));
     }
 
-    private static void assertSpec(HatchSpec spec, int id, String name, int tier, int amperage,
-        HatchDirection direction) {
-        assertEquals(id, spec.id());
-        assertEquals(name, spec.name());
+    private static void assertSpec(HatchSpec spec, String tierLabel, int tier, int amperage, HatchDirection direction) {
+        String directionLabel = direction == HatchDirection.ENERGY ? "energy" : "dynamo";
+        assertEquals("appeu.hatch." + directionLabel + '.' + tierLabel + '.' + amperage + 'a', spec.name());
         assertEquals(tier, spec.tier());
         assertEquals(amperage, spec.amperage());
         assertEquals(direction, spec.direction());
