@@ -5,7 +5,6 @@ import java.io.IOException;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IIcon;
@@ -15,11 +14,14 @@ import net.minecraft.world.World;
 import org.lwjgl.opengl.GL11;
 
 import appeng.api.config.FuzzyMode;
+import appeng.api.config.TerminalFontSize;
 import appeng.api.storage.StorageChannel;
 import appeng.api.storage.data.IAEStack;
 import appeng.api.storage.data.IAEStackType;
 import appeng.api.storage.data.IAETagCompound;
-import cpw.mods.fml.common.registry.GameRegistry;
+import appeng.client.render.StackSizeRenderer;
+import appeng.core.AEConfig;
+import cn.dancingsnow.appeu.registry.ModItems;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import io.netty.buffer.ByteBuf;
@@ -193,8 +195,7 @@ public final class EUStack implements IAEStack<EUStack> {
 
     @Override
     public ItemStack getItemStackForNEI() {
-        Item item = GameRegistry.findItem("appeu", "eu_storage_component");
-        return item == null ? null : new ItemStack(item, 1, 0);
+        return new ItemStack(ModItems.EU_ENERGY_DISPLAY);
     }
 
     @Override
@@ -207,17 +208,19 @@ public final class EUStack implements IAEStack<EUStack> {
     @SideOnly(Side.CLIENT)
     public void drawOverlayInGui(Minecraft mc, int x, int y, boolean showAmount, boolean showAmountAlways,
         boolean showCraftableText, boolean showCraftableIcon) {
-        if (!showAmount || amount <= 0 || (amount == 1 && !showAmountAlways)) {
-            return;
+        TerminalFontSize fontSize = AEConfig.instance.getTerminalFontSize();
+
+        GL11.glTranslatef(0.0F, 0.0F, 200.0F);
+        GL11.glDisable(GL11.GL_LIGHTING);
+
+        if (showAmount && (amount > 1 || showAmountAlways && amount > 0)) {
+            GL11.glPushMatrix();
+            StackSizeRenderer.drawStackSize(x, y, amount, mc.fontRenderer, fontSize);
+            GL11.glPopMatrix();
         }
 
-        String text = Long.toString(amount);
-        float scale = Math.min(1.0F, 16.0F / mc.fontRenderer.getStringWidth(text));
-        GL11.glPushMatrix();
-        GL11.glTranslatef(x + 17, y + 9, 200.0F);
-        GL11.glScalef(scale, scale, 1.0F);
-        mc.fontRenderer.drawStringWithShadow(text, -mc.fontRenderer.getStringWidth(text), 0, 0xFFFFFF);
-        GL11.glPopMatrix();
+        GL11.glEnable(GL11.GL_LIGHTING);
+        GL11.glTranslatef(0.0F, 0.0F, -200.0F);
     }
 
     @Override
