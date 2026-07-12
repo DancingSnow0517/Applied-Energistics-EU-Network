@@ -408,9 +408,10 @@ Expected result:
   permanently at zero.
 - The hatch active state follows its AE proxy within 20 ticks after both active and inactive transitions.
 - The new-build sampled log contains no `EU amount cannot be negative` exception.
-- Under the same profiler conditions, the new build no longer causes exception-driven repeated CPU spikes and its
-  measured load falls significantly relative to the affected old-build baseline. Evaluate the relative comparison and
-  log result without applying an absolute, hardware-independent millisecond threshold.
+- Under the same profiler conditions, the repeated exception-driven CPU spikes and corresponding
+  `EU amount cannot be negative` exception stack trace present in the affected old-build baseline are absent from the
+  new build. Record the old/new numeric values for comparison only; do not apply a relative-reduction requirement or an
+  absolute, hardware-independent performance threshold.
 
 Evidence / notes:
 
@@ -428,8 +429,10 @@ Evidence / notes:
 - Dynamo buffer EU before / after: ____________________ / ____________________
 - Dynamo calculated bound (`min(20 * V[tier] * A, free cell capacity)`): ____________________
 - Dynamo conserved (`buffer loss = network gain`): [ ] Yes  [ ] No
-- Active transition latency (ticks): ____________________
-- Inactive transition latency (ticks): ____________________
+- Energy active transition latency (ticks): ____________________
+- Energy inactive transition latency (ticks): ____________________
+- Dynamo active transition latency (ticks): ____________________
+- Dynamo inactive transition latency (ticks): ____________________
 - CPU profiler/tool: ____________________
 - CPU metric / unit: ____________________ / ____________________
 - Affected old build/hash: ____________________
