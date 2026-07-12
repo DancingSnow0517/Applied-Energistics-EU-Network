@@ -27,7 +27,7 @@ Before testing:
 
 ## 1. MetaTileEntity ID Range And Conflict Failure
 
-- [ ] PASS
+- [ ] Pass  [ ] Fail  [ ] Blocked
 
 Steps:
 
@@ -45,9 +45,11 @@ Expected result:
   generated hatch specification/name that attempted to use it.
 - No later ID in this mod's range is silently substituted and no conflicting machine is replaced.
 
+Evidence / notes: ________________________________________________________________________________
+
 ## 2. NEI Product Matrix And Boundaries
 
-- [ ] PASS
+- [ ] Pass  [ ] Fail  [ ] Blocked
 
 Steps:
 
@@ -63,11 +65,26 @@ Expected result:
 - Laser hatches cover IV through UXV at `256A`, `1024A`, and `4096A`, in both directions; no LV-EV laser variant exists.
 - Every entry has the correct tier, amperage, direction, localized name, and matching standard/multi/laser overlay.
 
+Evidence / notes: ________________________________________________________________________________
+
 ## 3. Eight EU Cells In ME Drive And ME Chest
 
-- [ ] PASS
+- [ ] Pass  [ ] Fail  [ ] Blocked
 
 Test every suffix: `1k`, `4k`, `16k`, `64k`, `256k`, `1024k`, `4096k`, and `16384k`.
+
+With `EU_PER_BYTE = 1024 * 1024`, use these exact acceptance values:
+
+| Suffix | Capacity (EU) | Idle drain (AE/t) |
+| --- | ---: | ---: |
+| `1k` | 1,073,741,824 | 0.5 |
+| `4k` | 4,294,967,296 | 1.0 |
+| `16k` | 17,179,869,184 | 1.5 |
+| `64k` | 68,719,476,736 | 2.0 |
+| `256k` | 274,877,906,944 | 2.5 |
+| `1024k` | 1,099,511,627,776 | 3.0 |
+| `4096k` | 4,398,046,511,104 | 3.5 |
+| `16384k` | 17,592,186,044,416 | 4.0 |
 
 Steps:
 
@@ -86,9 +103,11 @@ Expected result:
 - Save/reload, removal, reinsertion, and movement between Drive and Chest preserve EU exactly.
 - Disassembly is allowed only when empty and returns the matching component tier plus the normal housing/upgrades.
 
+Evidence / notes: ________________________________________________________________________________
+
 ## 4. Unified Terminal Presentation
 
-- [ ] PASS
+- [ ] Pass  [ ] Fail  [ ] Blocked
 
 Steps:
 
@@ -103,9 +122,11 @@ Expected result:
 - The amount updates with storage changes and no duplicate/fuzzy variants appear.
 - No dedicated EU terminal, terminal GUI, or terminal recipe exists.
 
+Evidence / notes: ________________________________________________________________________________
+
 ## 5. Front-Only AE Cable, Channel Use, And Inactive Network
 
-- [ ] PASS
+- [ ] Pass  [ ] Fail  [ ] Blocked
 
 Repeat with standard energy, multi-amp energy, laser energy, standard dynamo, multi-amp dynamo, and laser dynamo
 hatches.
@@ -124,9 +145,11 @@ Expected result:
 - An inactive or channel-starved node transfers zero EU and leaves the local buffer unchanged.
 - Transfer resumes without loss or duplication when the same node becomes active again.
 
+Evidence / notes: ________________________________________________________________________________
+
 ## 6. Fixed-Amperage Throughput At LV, IV, And UXV
 
-- [ ] PASS
+- [ ] Pass  [ ] Fail  [ ] Blocked
 
 Steps:
 
@@ -143,9 +166,11 @@ Expected result:
 - No hatch exceeds its declared limit, and partial availability/capacity transfers only the amount actually available.
 - Energy hatches move network EU into their local buffer; dynamo hatches move local-buffer EU into the network.
 
+Evidence / notes: ________________________________________________________________________________
+
 ## 7. Local Buffer Capacity Formulas
 
-- [ ] PASS
+- [ ] Pass  [ ] Fail  [ ] Blocked
 
 Steps:
 
@@ -167,9 +192,11 @@ Expected result:
 - Reported and observed capacities match exactly, including the standard-dynamo tier offset.
 - Laser capacity follows the current screwdriver-selected amperage, not merely the registered maximum.
 
+Evidence / notes: ________________________________________________________________________________
+
 ## 8. Partial And Full-Cell Conservation
 
-- [ ] PASS
+- [ ] Pass  [ ] Fail  [ ] Blocked
 
 Steps:
 
@@ -187,9 +214,11 @@ Expected result:
   normal full-buffer behavior.
 - An empty network supplies zero EU and the energy hatch does not invent energy.
 
+Evidence / notes: ________________________________________________________________________________
+
 ## 9. Disconnect, Chunk Reload, And World Restart Conservation
 
-- [ ] PASS
+- [ ] Pass  [ ] Fail  [ ] Blocked
 
 Steps:
 
@@ -204,9 +233,11 @@ Expected result:
 - Chunk unload/reload and a full world restart preserve every cell amount and hatch-buffer amount exactly.
 - Across every transition, total EU is conserved and each AE node reconnects with one channel on the hatch front.
 
+Evidence / notes: ________________________________________________________________________________
+
 ## 10. HatchElement Acceptance Matrix
 
-- [ ] PASS
+- [ ] Pass  [ ] Fail  [ ] Blocked
 
 For each table cell, form a representative multiblock whose hatch requirement contains only the row's element. Confirm
 that `Accept` hatches are added to the machine and allow formation, while `Reject` hatches are not added and cannot
@@ -227,9 +258,11 @@ Expected result:
 - A rejected hatch neither forms the machine through the tested element nor appears in that element's runtime hatch
   list.
 
+Evidence / notes: ________________________________________________________________________________
+
 ## 11. Ordinary-Energy-Only Multiblock Rejects Laser Energy Hatches
 
-- [ ] PASS
+- [ ] Pass  [ ] Fail  [ ] Blocked
 
 Steps:
 
@@ -243,9 +276,11 @@ Expected result:
 - The control ordinary ME energy hatch is accepted, proving rejection is caused by hatch classification rather than the
   test structure.
 
+Evidence / notes: ________________________________________________________________________________
+
 ## 12. Laser-Pipe Isolation And Screwdriver Amperage Persistence
 
-- [ ] PASS
+- [ ] Pass  [ ] Fail  [ ] Blocked
 
 Repeat with both ME laser energy and ME laser dynamo hatches at representative IV and UXV tiers.
 
@@ -266,6 +301,8 @@ Expected result:
 - Screwdriver selection is clamped to `1..registered maximum`; throughput is `V[tier] * currentAmperes` and buffer is
   `24 * V[tier] * currentAmperes`.
 - The selected amperage survives chunk reload, world reload, and full game restart without resetting to the maximum.
+
+Evidence / notes: ________________________________________________________________________________
 
 ## Final Result
 
