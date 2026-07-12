@@ -84,13 +84,15 @@ public class MTEHatchMEDynamo extends MTEHatchDynamo implements IGridProxyable, 
             return;
         }
 
-        EnergyPort port = connection.energyPort();
-        if (port != null) {
-            long stored = getEUVar();
-            long limit = Math.multiplyExact(V[mTier], (long) fixedAmperage);
-            long moved = EnergyTransfer.push(port, stored, limit);
-            if (moved > 0) {
-                setEUVar(Math.subtractExact(stored, moved));
+        long stored = getEUVar();
+        if (stored > 0) {
+            EnergyPort port = connection.energyPort();
+            if (port != null) {
+                long limit = Math.multiplyExact(V[mTier], (long) fixedAmperage);
+                long moved = EnergyTransfer.push(port, stored, limit);
+                if (moved > 0) {
+                    setEUVar(Math.subtractExact(stored, moved));
+                }
             }
         }
         if (tick % 20 == 0) {
@@ -130,7 +132,9 @@ public class MTEHatchMEDynamo extends MTEHatchDynamo implements IGridProxyable, 
     }
 
     @Override
-    public void gridChanged() {}
+    public void gridChanged() {
+        connection.gridChanged();
+    }
 
     @Override
     public boolean connectsToAllSides() {

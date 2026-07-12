@@ -35,6 +35,7 @@ public final class MEHatchConnection {
 
     private AENetworkProxy proxy;
     private MachineSource actionSource;
+    private EnergyPort cachedEnergyPort;
 
     public MEHatchConnection(IGridProxyable owner, Supplier<IGregTechTileEntity> baseTileSupplier,
         Supplier<ItemStack> visualRepresentationSupplier) {
@@ -92,6 +93,7 @@ public final class MEHatchConnection {
     }
 
     public void onColorChangeServer(byte color) {
+        cachedEnergyPort = null;
         AENetworkProxy networkProxy = getProxy();
         networkProxy.setColor(color == -1 ? AEColor.Transparent : AEColor.values()[Dyes.transformDyeIndex(color)]);
         IGridNode node = networkProxy.getNode();
@@ -105,9 +107,14 @@ public final class MEHatchConnection {
     }
 
     public void loadNBTData(NBTTagCompound tag) {
+        cachedEnergyPort = null;
         if (tag.hasKey("proxy")) {
             getProxy().readFromNBT(tag);
         }
+    }
+
+    public void gridChanged() {
+        cachedEnergyPort = null;
     }
 
     public boolean isPowered() {
@@ -122,7 +129,12 @@ public final class MEHatchConnection {
     public EnergyPort energyPort() {
         AENetworkProxy networkProxy = getProxy();
         if (!networkProxy.isActive()) {
+            cachedEnergyPort = null;
             return null;
+        }
+
+        if (cachedEnergyPort != null) {
+            return cachedEnergyPort;
         }
 
         MachineSource source = getActionSource();
@@ -139,8 +151,10 @@ public final class MEHatchConnection {
 
             @SuppressWarnings("unchecked")
             IMEMonitor<EUStack> euMonitor = (IMEMonitor<EUStack>) monitor;
-            return new AEGridEnergyPort(euMonitor, source);
+            cachedEnergyPort = new AEGridEnergyPort(euMonitor, source);
+            return cachedEnergyPort;
         } catch (GridAccessException ignored) {
+            cachedEnergyPort = null;
             return null;
         }
     }
@@ -150,6 +164,7 @@ public final class MEHatchConnection {
     }
 
     private void updateValidSides(AENetworkProxy networkProxy) {
+        cachedEnergyPort = null;
         IGregTechTileEntity baseTile = getBaseTile();
         EnumSet<ForgeDirection> validSides = baseTile == null ? EnumSet.noneOf(ForgeDirection.class)
             : EnumSet.of(baseTile.getFrontFacing());

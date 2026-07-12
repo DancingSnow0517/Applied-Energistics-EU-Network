@@ -40,16 +40,16 @@ class HatchSpecsTest {
     }
 
     @Test
-    void usesStableTierAmpDirectionOrdering() {
+    void groupsByAmperageThenTierThenDynamoBeforeEnergy() {
         List<HatchSpec> specs = HatchSpecs.create(27_000);
         String[] tierLabels = { "lv", "mv", "hv", "ev", "iv", "luv", "zpm", "uv", "uhv", "uev", "uiv", "umv", "uxv" };
         int[] standardAmperages = { 2, 4, 16, 64 };
         int[] laserAmperages = { 256, 1_024, 4_096 };
-        HatchDirection[] directions = { HatchDirection.ENERGY, HatchDirection.DYNAMO };
+        HatchDirection[] directions = { HatchDirection.DYNAMO, HatchDirection.ENERGY };
         int index = 0;
 
-        for (int tier = 1; tier <= tierLabels.length; tier++) {
-            for (int amperage : standardAmperages) {
+        for (int amperage : standardAmperages) {
+            for (int tier = 1; tier <= tierLabels.length; tier++) {
                 for (HatchDirection direction : directions) {
                     assertSpec(specs.get(index++), tierLabels[tier - 1], tier, amperage, direction);
                 }
@@ -113,7 +113,7 @@ class HatchSpecsTest {
                 .stream()
                 .allMatch(spec -> spec.amperage() == 16_384 && spec.tier() >= 5));
         assertEquals(
-            "appeu.hatch.energy.iv.16384a",
+            "appeu.hatch.dynamo.iv.16384a",
             specs.get(158)
                 .name());
     }
@@ -138,11 +138,11 @@ class HatchSpecsTest {
                     .family());
         }
         assertEquals(
-            "appeu.hatch.energy.iv.512a",
+            "appeu.hatch.dynamo.iv.512a",
             specs.get(0)
                 .name());
         assertEquals(
-            "appeu.hatch.dynamo.uxv.512a",
+            "appeu.hatch.energy.uxv.512a",
             specs.get(17)
                 .name());
     }

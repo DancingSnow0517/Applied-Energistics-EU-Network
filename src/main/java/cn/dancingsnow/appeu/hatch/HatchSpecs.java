@@ -14,7 +14,7 @@ public final class HatchSpecs {
         "umv", "uxv" };
     private static final int[] STANDARD_AMPERAGES = { 2, 4, 16, 64 };
     private static final int[] DEFAULT_LASER_AMPERAGES = { 256, 1_024, 4_096 };
-    private static final HatchDirection[] DIRECTIONS = { HatchDirection.ENERGY, HatchDirection.DYNAMO };
+    private static final HatchDirection[] DIRECTIONS = { HatchDirection.DYNAMO, HatchDirection.ENERGY };
 
     private HatchSpecs() {}
 
@@ -28,8 +28,8 @@ public final class HatchSpecs {
         validateLaserAmperages(laserAmperages);
 
         List<HatchSpec> specs = new ArrayList<>();
-        for (int tier = 1; tier <= TIER_LABELS.length; tier++) {
-            for (int amperage : STANDARD_AMPERAGES) {
+        for (int amperage : STANDARD_AMPERAGES) {
+            for (int tier = 1; tier <= TIER_LABELS.length; tier++) {
                 for (HatchDirection direction : DIRECTIONS) {
                     add(specs, start, tier, amperage, direction);
                 }

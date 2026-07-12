@@ -71,13 +71,16 @@ public class MTEHatchMEEnergyTunnel extends MTEHatchEnergyTunnel
             return;
         }
 
-        EnergyPort port = connection.energyPort();
-        if (port != null) {
-            long stored = getEUVar();
-            long limit = Math.multiplyExact(V[mTier], (long) getAmperes());
-            long moved = EnergyTransfer.pull(port, stored, maxEUStore(), limit);
-            if (moved > 0) {
-                setEUVar(Math.addExact(stored, moved));
+        long stored = getEUVar();
+        long capacity = maxEUStore();
+        if (stored < capacity) {
+            EnergyPort port = connection.energyPort();
+            if (port != null) {
+                long limit = Math.multiplyExact(V[mTier], (long) getAmperes());
+                long moved = EnergyTransfer.pull(port, stored, capacity, limit);
+                if (moved > 0) {
+                    setEUVar(Math.addExact(stored, moved));
+                }
             }
         }
         if (tick % 20 == 0) {
@@ -122,7 +125,9 @@ public class MTEHatchMEEnergyTunnel extends MTEHatchEnergyTunnel
     }
 
     @Override
-    public void gridChanged() {}
+    public void gridChanged() {
+        connection.gridChanged();
+    }
 
     @Override
     public boolean connectsToAllSides() {
