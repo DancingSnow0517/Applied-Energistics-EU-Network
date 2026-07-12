@@ -2,7 +2,6 @@ package cn.dancingsnow.appeu.storage;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -94,29 +93,84 @@ class EUStackListTest {
     }
 
     @Test
-    void fuzzyAndIterationExposeIndependentCopies() {
+    void preciseLookupExposesMutableBackingRecordForCellInjection() {
+        EUStackList list = new EUStackList();
+        list.addStorage(new EUStack(10));
+
+        list.findPrecise(new EUStack(1))
+            .incStackSize(7);
+
+        assertEquals(
+            17,
+            list.findPrecise(new EUStack(1))
+                .getStackSize());
+    }
+
+    @Test
+    void preciseLookupExposesMutableBackingRecordForCellExtractionAndZeroCleanup() {
+        EUStackList list = new EUStackList();
+        list.addStorage(new EUStack(10));
+
+        EUStack record = list.findPrecise(new EUStack(1));
+        record.decStackSize(4);
+        assertEquals(
+            6,
+            list.findPrecise(new EUStack(1))
+                .getStackSize());
+
+        record.decStackSize(6);
+        assertEquals(
+            0,
+            list.findPrecise(new EUStack(1))
+                .getStackSize());
+        assertFalse(
+            list.iterator()
+                .hasNext());
+        assertEquals(0, list.size());
+        assertNull(list.findPrecise(new EUStack(1)));
+    }
+
+    @Test
+    void fuzzyFirstAndIterationExposeTheMutableBackingRecord() {
         EUStackList list = new EUStackList();
         list.addStorage(new EUStack(17));
 
         EUStack precise = list.findPrecise(new EUStack(1));
         Collection<EUStack> fuzzy = list.findFuzzy(new EUStack(1), FuzzyMode.IGNORE_ALL);
+        EUStack first = list.getFirstItem();
         Iterator<EUStack> iterator = list.iterator();
+        assertTrue(iterator.hasNext());
         EUStack iterated = iterator.next();
 
         assertEquals(1, fuzzy.size());
         EUStack fuzzyStack = fuzzy.iterator()
             .next();
-        assertNotSame(precise, fuzzyStack);
-        assertNotSame(precise, iterated);
+        assertSame(precise, fuzzyStack);
+        assertSame(precise, first);
+        assertSame(precise, iterated);
         assertFalse(iterator.hasNext());
 
-        precise.setStackSize(1);
-        fuzzyStack.setStackSize(2);
-        iterated.setStackSize(3);
+        iterated.incStackSize(3);
         assertEquals(
-            17,
-            list.getFirstItem()
+            20,
+            list.findPrecise(new EUStack(1))
                 .getStackSize());
+    }
+
+    @Test
+    void iteratorRemoveDeletesTheBackingRecord() {
+        EUStackList list = new EUStackList();
+        list.addStorage(new EUStack(17));
+
+        Iterator<EUStack> iterator = list.iterator();
+        assertTrue(iterator.hasNext());
+        iterator.next();
+        iterator.remove();
+
+        assertFalse(iterator.hasNext());
+        assertTrue(list.isEmpty());
+        assertEquals(0, list.size());
+        assertNull(list.findPrecise(new EUStack(1)));
     }
 
     @Test

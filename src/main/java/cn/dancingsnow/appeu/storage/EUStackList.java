@@ -1,16 +1,21 @@
 package cn.dancingsnow.appeu.storage;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
+
+import org.jetbrains.annotations.NotNull;
 
 import appeng.api.config.FuzzyMode;
 import appeng.api.storage.data.IAEStackType;
 import appeng.api.storage.data.IItemList;
+import appeng.util.item.MeaningfulFluidIterator;
 
 public final class EUStackList implements IItemList<EUStack> {
 
-    private EUStack stored;
+    private final List<EUStack> records = new ArrayList<>(1);
 
     @Override
     public void add(EUStack option) {
@@ -19,7 +24,7 @@ public final class EUStackList implements IItemList<EUStack> {
 
     @Override
     public EUStack findPrecise(EUStack request) {
-        return request != null && stored != null ? stored.copy() : null;
+        return request == null || records.isEmpty() ? null : records.get(0);
     }
 
     @Override
@@ -30,7 +35,7 @@ public final class EUStackList implements IItemList<EUStack> {
 
     @Override
     public boolean isEmpty() {
-        return stored == null;
+        return !iterator().hasNext();
     }
 
     @Override
@@ -48,24 +53,27 @@ public final class EUStackList implements IItemList<EUStack> {
 
     @Override
     public EUStack getFirstItem() {
-        return stored == null ? null : stored.copy();
+        for (EUStack record : this) {
+            return record;
+        }
+        return null;
     }
 
     @Override
     public int size() {
-        return stored == null ? 0 : 1;
+        return records.size();
     }
 
     @Override
-    public Iterator<EUStack> iterator() {
-        return stored == null ? Collections.emptyIterator()
-            : Collections.singletonList(stored.copy())
-                .iterator();
+    public @NotNull Iterator<EUStack> iterator() {
+        return new MeaningfulFluidIterator<>(records.iterator());
     }
 
     @Override
     public void resetStatus() {
-        stored = null;
+        for (EUStack record : this) {
+            record.reset();
+        }
     }
 
     @Override
@@ -74,14 +82,15 @@ public final class EUStackList implements IItemList<EUStack> {
     }
 
     private void addStored(EUStack option) {
-        if (option == null || !option.isMeaningful()) {
+        if (option == null) {
             return;
         }
 
-        if (stored == null) {
-            stored = option.copy();
+        if (records.isEmpty()) {
+            records.add(option.copy());
         } else {
-            stored.add(option);
+            records.get(0)
+                .add(option);
         }
     }
 }
