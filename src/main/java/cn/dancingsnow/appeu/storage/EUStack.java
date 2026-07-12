@@ -9,6 +9,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IIcon;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 
 import org.lwjgl.opengl.GL11;
@@ -174,7 +175,7 @@ public final class EUStack implements IAEStack<EUStack> {
 
     @Override
     public String getDisplayName() {
-        return "EU Energy";
+        return StatCollector.translateToLocal("appeu.stack.eu");
     }
 
     @Override

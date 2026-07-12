@@ -7,6 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.StatCollector;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -37,7 +38,7 @@ public final class EUStackType implements IAEStackType<EUStack> {
 
     @Override
     public String getDisplayName() {
-        return "EU Energy";
+        return StatCollector.translateToLocal("appeu.stack.eu");
     }
 
     @Override
