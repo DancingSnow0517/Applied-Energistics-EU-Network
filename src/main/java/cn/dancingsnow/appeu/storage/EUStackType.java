@@ -47,12 +47,12 @@ public final class EUStackType implements IAEStackType<EUStack> {
 
     @Override
     public EUStack loadStackFromNBT(NBTTagCompound tag) {
-        return new EUStack(tag.getLong(EUConstants.NBT_AMOUNT));
+        return EUStack.fromNBT(tag);
     }
 
     @Override
     public EUStack loadStackFromByte(ByteBuf buffer) throws IOException {
-        return new EUStack(buffer.readLong());
+        return EUStack.fromPacket(buffer);
     }
 
     @Override

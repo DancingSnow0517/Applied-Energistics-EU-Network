@@ -64,7 +64,7 @@ class EUStackTest {
 
         assertEquals(
             amount,
-            EUStackType.INSTANCE.loadStackFromNBT(tag)
+            EUStack.fromNBT(tag)
                 .getStackSize());
     }
 
@@ -77,7 +77,7 @@ class EUStackTest {
 
         assertEquals(
             amount,
-            EUStackType.INSTANCE.loadStackFromByte(buffer)
+            EUStack.fromPacket(buffer)
                 .getStackSize());
         assertEquals(0, buffer.readableBytes());
     }

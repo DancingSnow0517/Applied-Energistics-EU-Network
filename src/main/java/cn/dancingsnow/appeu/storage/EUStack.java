@@ -31,6 +31,14 @@ public final class EUStack implements IAEStack<EUStack> {
         setStackSize(amount);
     }
 
+    public static EUStack fromNBT(NBTTagCompound tag) {
+        return new EUStack(tag.getLong(EUConstants.NBT_AMOUNT));
+    }
+
+    public static EUStack fromPacket(ByteBuf buffer) throws IOException {
+        return new EUStack(buffer.readLong());
+    }
+
     @Override
     public void add(EUStack stack) {
         if (stack != null) {
