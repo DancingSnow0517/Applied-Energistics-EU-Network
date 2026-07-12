@@ -4,14 +4,22 @@ import java.io.File;
 
 import net.minecraftforge.common.config.Configuration;
 
+import gregtech.api.GregTechAPI;
+
 public class Config {
 
-    public static String greeting = "Hello World";
+    public static int metaTileEntityIdStart = 27_000;
 
     public static void synchronizeConfiguration(File configFile) {
         Configuration configuration = new Configuration(configFile);
 
-        greeting = configuration.getString("greeting", Configuration.CATEGORY_GENERAL, greeting, "How shall I greet?");
+        metaTileEntityIdStart = configuration.getInt(
+            "metaTileEntityIdStart",
+            Configuration.CATEGORY_GENERAL,
+            metaTileEntityIdStart,
+            1,
+            GregTechAPI.MAXIMUM_METATILE_IDS - 158,
+            "Starting MetaTileEntity ID for the contiguous 158-ID default ME hatch matrix.");
 
         if (configuration.hasChanged()) {
             configuration.save();

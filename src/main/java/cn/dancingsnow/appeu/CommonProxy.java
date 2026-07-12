@@ -12,7 +12,6 @@ public class CommonProxy {
     public void preInit(FMLPreInitializationEvent event) {
         Config.synchronizeConfiguration(event.getSuggestedConfigurationFile());
 
-        AppEU.LOG.info(Config.greeting);
         AppEU.LOG.info("I am MyMod at version " + Tags.VERSION);
     }
 
