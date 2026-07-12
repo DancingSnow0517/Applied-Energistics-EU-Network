@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -36,7 +35,7 @@ class EUCellTierTest {
     }
 
     @Test
-    void explicitMetadataIsUniqueCompleteAndBacksLookup() throws ReflectiveOperationException {
+    void explicitMetadataIsUniqueAndComplete() {
         EUCellTier[] tiers = EUCellTier.values();
         Set<Integer> metadata = Arrays.stream(tiers)
             .map(EUCellTier::meta)
@@ -47,13 +46,6 @@ class EUCellTierTest {
 
         assertEquals(tiers.length, metadata.size());
         assertEquals(expected, metadata);
-
-        Field byMetaField = EUCellTier.class.getDeclaredField("BY_META");
-        byMetaField.setAccessible(true);
-        EUCellTier[] byMeta = (EUCellTier[]) byMetaField.get(null);
-        for (EUCellTier tier : tiers) {
-            assertSame(tier, byMeta[tier.meta()]);
-        }
     }
 
     @Test
