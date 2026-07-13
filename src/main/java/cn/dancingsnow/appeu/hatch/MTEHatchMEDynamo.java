@@ -12,10 +12,10 @@ import appeng.api.util.AECableType;
 import appeng.api.util.DimensionalCoord;
 import appeng.me.helpers.AENetworkProxy;
 import appeng.me.helpers.IGridProxyable;
+import cn.dancingsnow.appeu.client.AppEUTextures;
 import cn.dancingsnow.appeu.hatch.transfer.EnergyPort;
 import cn.dancingsnow.appeu.hatch.transfer.EnergyTransfer;
 import cn.dancingsnow.appeu.hatch.transfer.MEHatchTransferPolicy;
-import gregtech.api.enums.Textures;
 import gregtech.api.interfaces.IMEConnectable;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
@@ -50,9 +50,7 @@ public class MTEHatchMEDynamo extends MTEHatchDynamo implements IGridProxyable, 
 
     @Override
     public ITexture[] getTexturesActive(ITexture baseTexture) {
-        return new ITexture[] { baseTexture,
-            fixedAmperage == 2 ? Textures.BlockIcons.OVERLAYS_ENERGY_OUT_MULTI_2A[mTier + 1]
-                : Textures.BlockIcons.OVERLAYS_ENERGY_OUT_MULTI_4A[mTier + 1] };
+        return new ITexture[] { baseTexture, AppEUTextures.BlockIcons.OVERLAYS_ME_ENERGY_OUT_TEXTURE };
     }
 
     @Override

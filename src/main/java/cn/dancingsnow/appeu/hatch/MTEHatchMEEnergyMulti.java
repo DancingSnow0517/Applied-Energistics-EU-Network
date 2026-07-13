@@ -12,10 +12,10 @@ import appeng.api.util.AECableType;
 import appeng.api.util.DimensionalCoord;
 import appeng.me.helpers.AENetworkProxy;
 import appeng.me.helpers.IGridProxyable;
+import cn.dancingsnow.appeu.client.AppEUTextures;
 import cn.dancingsnow.appeu.hatch.transfer.EnergyPort;
 import cn.dancingsnow.appeu.hatch.transfer.EnergyTransfer;
 import cn.dancingsnow.appeu.hatch.transfer.MEHatchTransferPolicy;
-import gregtech.api.enums.Textures;
 import gregtech.api.interfaces.IMEConnectable;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
@@ -66,14 +66,12 @@ public class MTEHatchMEEnergyMulti extends MTEHatchEnergyMulti
 
     @Override
     public ITexture[] getTexturesActive(ITexture baseTexture) {
-        ITexture overlay;
-        if (fixedAmperage == 4) {
-            overlay = Textures.BlockIcons.OVERLAYS_ENERGY_IN_MULTI_4A[mTier + 1];
-        } else if (fixedAmperage == 16) {
-            overlay = Textures.BlockIcons.OVERLAYS_ENERGY_IN_MULTI_16A[mTier + 1];
-        } else {
-            overlay = Textures.BlockIcons.OVERLAYS_ENERGY_IN_MULTI_64A[mTier + 1];
-        }
+        ITexture overlay = switch (fixedAmperage) {
+            case 4 -> AppEUTextures.BlockIcons.OVERLAYS_ME_ENERGY_IN_4A_TEXTURE;
+            case 16 -> AppEUTextures.BlockIcons.OVERLAYS_ME_ENERGY_IN_16A_TEXTURE;
+            case 64 -> AppEUTextures.BlockIcons.OVERLAYS_ME_ENERGY_IN_64A_TEXTURE;
+            default -> throw new IllegalStateException("Invalid amperage: " + fixedAmperage);
+        };
         return new ITexture[] { baseTexture, overlay };
     }
 

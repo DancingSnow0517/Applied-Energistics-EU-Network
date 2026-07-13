@@ -12,10 +12,10 @@ import appeng.api.util.AECableType;
 import appeng.api.util.DimensionalCoord;
 import appeng.me.helpers.AENetworkProxy;
 import appeng.me.helpers.IGridProxyable;
+import cn.dancingsnow.appeu.client.AppEUTextures;
 import cn.dancingsnow.appeu.hatch.transfer.EnergyPort;
 import cn.dancingsnow.appeu.hatch.transfer.EnergyTransfer;
 import cn.dancingsnow.appeu.hatch.transfer.MEHatchTransferPolicy;
-import gregtech.api.enums.Textures;
 import gregtech.api.interfaces.IMEConnectable;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
@@ -61,8 +61,12 @@ public class MTEHatchMEDynamoMulti extends MTEHatchDynamoMulti
 
     @Override
     public ITexture[] getTexturesActive(ITexture baseTexture) {
-        ITexture overlay = fixedAmperage == 16 ? Textures.BlockIcons.OVERLAYS_ENERGY_OUT_MULTI_16A[mTier + 1]
-            : Textures.BlockIcons.OVERLAYS_ENERGY_OUT_MULTI_64A[mTier + 1];
+        ITexture overlay = switch (fixedAmperage) {
+            case 4 -> AppEUTextures.BlockIcons.OVERLAYS_ME_ENERGY_OUT_4A_TEXTURE;
+            case 16 -> AppEUTextures.BlockIcons.OVERLAYS_ME_ENERGY_OUT_16A_TEXTURE;
+            case 64 -> AppEUTextures.BlockIcons.OVERLAYS_ME_ENERGY_OUT_64A_TEXTURE;
+            default -> throw new IllegalStateException("Invalid amperage: " + fixedAmperage);
+        };
         return new ITexture[] { baseTexture, overlay };
     }
 
@@ -202,7 +206,7 @@ public class MTEHatchMEDynamoMulti extends MTEHatchDynamoMulti
     }
 
     private static int validateAmperage(int amperage) {
-        if (amperage != 16 && amperage != 64) {
+        if (amperage != 4 && amperage != 16 && amperage != 64) {
             throw new IllegalArgumentException("multi-amp ME dynamo amperage must be 16 or 64: " + amperage);
         }
         return amperage;

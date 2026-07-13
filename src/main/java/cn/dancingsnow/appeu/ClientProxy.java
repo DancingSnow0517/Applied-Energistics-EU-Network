@@ -3,6 +3,9 @@ package cn.dancingsnow.appeu;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
 
+import cn.dancingsnow.appeu.client.AppEUBlockIconContainer;
+import cn.dancingsnow.appeu.client.AppEUOptionalBlockIconContainer;
+import cn.dancingsnow.appeu.client.AppEUTextures;
 import cn.dancingsnow.appeu.storage.EUStackType;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -17,6 +20,12 @@ public class ClientProxy extends CommonProxy {
 
     @SubscribeEvent
     public void onTextureStitchPre(TextureStitchEvent.Pre event) {
+        if (event.map.getTextureType() == 0) {
+            AppEUTextures.BlockIcons.register();
+
+            AppEUBlockIconContainer.registerIcons(event.map);
+            AppEUOptionalBlockIconContainer.registerIcons(event.map);
+        }
         if (event.map.getTextureType() == 1) {
             EUStackType.INSTANCE.registerIcon(event.map);
         }

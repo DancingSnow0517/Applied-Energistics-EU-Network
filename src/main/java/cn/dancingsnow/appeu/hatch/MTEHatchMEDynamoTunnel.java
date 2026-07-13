@@ -13,6 +13,7 @@ import appeng.api.util.AECableType;
 import appeng.api.util.DimensionalCoord;
 import appeng.me.helpers.AENetworkProxy;
 import appeng.me.helpers.IGridProxyable;
+import cn.dancingsnow.appeu.client.AppEUTextures;
 import cn.dancingsnow.appeu.hatch.transfer.EnergyPort;
 import cn.dancingsnow.appeu.hatch.transfer.EnergyTransfer;
 import cn.dancingsnow.appeu.hatch.transfer.MEHatchTransferPolicy;
@@ -177,6 +178,16 @@ public class MTEHatchMEDynamoTunnel extends MTEHatchDynamoTunnel
     @Override
     public boolean isActive() {
         return connection.isActive();
+    }
+
+    @Override
+    public ITexture[] getTexturesActive(ITexture aBaseTexture) {
+        return new ITexture[] { aBaseTexture, AppEUTextures.BlockIcons.OVERLAYS_ME_ENERGY_OUT_LASER_TEXTURE };
+    }
+
+    @Override
+    public ITexture[] getTexturesInactive(ITexture aBaseTexture) {
+        return getTexturesActive(aBaseTexture);
     }
 
     private static int validateTier(int tier) {

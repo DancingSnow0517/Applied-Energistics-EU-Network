@@ -64,8 +64,7 @@ public final class HatchSpecs {
         if (amperage >= 256) {
             return HatchFamily.LASER;
         }
-        int standardMaximum = direction == HatchDirection.ENERGY ? 2 : 4;
-        return amperage > standardMaximum ? HatchFamily.MULTI_AMP : HatchFamily.STANDARD;
+        return amperage > 2 ? HatchFamily.MULTI_AMP : HatchFamily.STANDARD;
     }
 
     private static void add(List<HatchSpec> specs, int start, int tier, int amperage, HatchDirection direction) {
