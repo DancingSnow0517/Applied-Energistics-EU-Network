@@ -6,7 +6,6 @@ import net.minecraftforge.common.MinecraftForge;
 import cn.dancingsnow.appeu.client.AppEUBlockIconContainer;
 import cn.dancingsnow.appeu.client.AppEUOptionalBlockIconContainer;
 import cn.dancingsnow.appeu.client.AppEUTextures;
-import cn.dancingsnow.appeu.storage.EUStackType;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
@@ -25,9 +24,6 @@ public class ClientProxy extends CommonProxy {
 
             AppEUBlockIconContainer.registerIcons(event.map);
             AppEUOptionalBlockIconContainer.registerIcons(event.map);
-        }
-        if (event.map.getTextureType() == 1) {
-            EUStackType.INSTANCE.registerIcon(event.map);
         }
     }
 }

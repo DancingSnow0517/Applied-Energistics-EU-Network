@@ -155,7 +155,7 @@ class HatchSpecsTest {
         assertEquals(HatchFamily.MULTI_AMP, HatchSpecs.family(HatchDirection.ENERGY, 255));
         assertEquals(HatchFamily.LASER, HatchSpecs.family(HatchDirection.ENERGY, 256));
 
-        assertEquals(HatchFamily.STANDARD, HatchSpecs.family(HatchDirection.DYNAMO, 4));
+        assertEquals(HatchFamily.STANDARD, HatchSpecs.family(HatchDirection.DYNAMO, 2));
         assertEquals(HatchFamily.MULTI_AMP, HatchSpecs.family(HatchDirection.DYNAMO, 5));
         assertEquals(HatchFamily.MULTI_AMP, HatchSpecs.family(HatchDirection.DYNAMO, 255));
         assertEquals(HatchFamily.LASER, HatchSpecs.family(HatchDirection.DYNAMO, 256));

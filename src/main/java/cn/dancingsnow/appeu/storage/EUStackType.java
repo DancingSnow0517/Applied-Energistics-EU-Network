@@ -2,7 +2,6 @@ package cn.dancingsnow.appeu.storage;
 
 import java.io.IOException;
 
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IIcon;
@@ -27,7 +26,6 @@ public final class EUStackType implements IAEStackType<EUStack> {
     private static final ResourceLocation BUTTON_TEXTURE = new ResourceLocation("appeu", "textures/gui/eu_stack.png");
 
     private final EUStack testStack = new EUStack(1);
-    private IIcon icon;
 
     private EUStackType() {}
 
@@ -58,11 +56,6 @@ public final class EUStackType implements IAEStackType<EUStack> {
 
     @Override
     public IItemList<EUStack> createList() {
-        return new EUStackList();
-    }
-
-    @Override
-    public IItemList<EUStack> createPrimitiveList() {
         return new EUStackList();
     }
 
@@ -116,12 +109,53 @@ public final class EUStackType implements IAEStackType<EUStack> {
     @Override
     @SideOnly(Side.CLIENT)
     public IIcon getButtonIcon() {
-        return icon;
-    }
+        return new IIcon() {
 
-    @SideOnly(Side.CLIENT)
-    public void registerIcon(IIconRegister iconRegister) {
-        icon = iconRegister.registerIcon("appeu:eu_stack");
+            @Override
+            public int getIconWidth() {
+                return 16;
+            }
+
+            @Override
+            public int getIconHeight() {
+                return 16;
+            }
+
+            @Override
+            public float getMinU() {
+                return 0;
+            }
+
+            @Override
+            public float getMaxU() {
+                return 1;
+            }
+
+            @Override
+            public float getInterpolatedU(double p_94214_1_) {
+                return 0;
+            }
+
+            @Override
+            public float getMinV() {
+                return 0;
+            }
+
+            @Override
+            public float getMaxV() {
+                return 1;
+            }
+
+            @Override
+            public float getInterpolatedV(double p_94207_1_) {
+                return 0;
+            }
+
+            @Override
+            public String getIconName() {
+                return "EUIcon";
+            }
+        };
     }
 
     @Override

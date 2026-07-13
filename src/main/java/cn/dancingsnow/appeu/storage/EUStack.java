@@ -237,10 +237,7 @@ public final class EUStack implements IAEStack<EUStack> {
 
     @SideOnly(Side.CLIENT)
     private static void drawIcon(Minecraft mc, int x, int y) {
-        IIcon icon = EUStackType.INSTANCE.getButtonIcon();
-        if (icon == null) {
-            return;
-        }
+        IIcon icon = ModItems.EU_ENERGY_DISPLAY.getIconFromDamage(0);
 
         mc.renderEngine.bindTexture(TextureMap.locationItemsTexture);
         GL11.glPushAttrib(GL11.GL_ENABLE_BIT | GL11.GL_COLOR_BUFFER_BIT | GL11.GL_CURRENT_BIT);
