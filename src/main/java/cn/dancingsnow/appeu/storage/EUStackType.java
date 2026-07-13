@@ -23,7 +23,7 @@ public final class EUStackType implements IAEStackType<EUStack> {
 
     public static final EUStackType INSTANCE = new EUStackType();
 
-    private static final ResourceLocation BUTTON_TEXTURE = new ResourceLocation("appeu", "textures/gui/eu_stack.png");
+    private static final ResourceLocation BUTTON_TEXTURE = new ResourceLocation("appeu", "textures/gui/eu_icon.png");
 
     private final EUStack testStack = new EUStack(1);
 
