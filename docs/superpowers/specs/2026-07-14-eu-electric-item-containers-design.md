@@ -32,7 +32,7 @@ Terminal container operations ignore tier and per-item transfer limits. The AE n
 - `getContainerItemCapacity` returns the non-negative maximum charge for a valid electric item and zero otherwise.
 - `fillContainer` charges a one-item copy by at most the offered EU and available capacity, then returns the updated copy and observed EU increase.
 - `drainStackFromContainer` discharges a one-item copy by at most the requested EU and current charge, then returns the updated copy and observed EU decrease.
-- `clearFilledContainer` discharges all current charge from a one-item copy and returns that copy. Invalid containers return null.
+- `clearFilledContainer` returns a fully discharged one-item copy only when all current charge was removed. Invalid containers or incomplete discharges return null.
 - `convertStackFromItem` remains unsupported because electric items are containers, not display-item conversions.
 
 The methods do not mutate the caller's stack. Item identity, metadata, and unrelated NBT are preserved by copying before transfer. Returned transfer amounts are clamped to the requested amount and observed charge range so AE2's simulate-then-modulate terminal flow cannot duplicate or delete EU when an item manager reports unexpected values.
@@ -42,6 +42,8 @@ The methods do not mutate the caller's stack. Item identity, metadata, and unrel
 Invalid metadata, non-positive capacities, empty items, rejected charge operations, and rejected discharge operations produce a zero transfer without changing the caller's item. Arithmetic uses bounded subtraction and minimum operations rather than unchecked addition, so `Long.MAX_VALUE` capacity and request values cannot overflow.
 
 If a manager makes no progress during a chunk, the transfer loop stops immediately. A manager that changes charge in an unexpected direction also stops the operation, and only a valid observed delta is returned.
+
+An incomplete `clearFilledContainer` operation returns null. This prevents AE2's batch drain path from injecting the reported container charge into the network while returning an item that still holds some or all of that charge.
 
 ## Testing
 
