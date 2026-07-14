@@ -3,6 +3,8 @@ itemGroup.appeu=Applied Energistics: EU Network
 
 # EU storage items
 item.appeu.eu_energy_display.name=EU Energy
+item.appeu.eu_storage_cell_housing.name=EU Storage Cell Housing
+item.appeu.advanced_eu_storage_cell_housing.name=Advanced EU Storage Cell Housing
 item.appeu.eu_storage_component_1k.name=1k EU Storage Component
 item.appeu.eu_storage_component_4k.name=4k EU Storage Component
 item.appeu.eu_storage_component_16k.name=16k EU Storage Component

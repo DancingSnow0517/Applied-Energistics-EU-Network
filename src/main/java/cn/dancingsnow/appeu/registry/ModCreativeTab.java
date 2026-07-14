@@ -21,13 +21,12 @@ public final class ModCreativeTab extends CreativeTabs {
     @Override
     @SideOnly(Side.CLIENT)
     public Item getTabIconItem() {
-        return ModItems.EU_ENERGY_DISPLAY;
+        return ModItems.EU_STORAGE_CELL;
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    @SuppressWarnings({ "rawtypes", "unchecked" })
-    public void displayAllReleventItems(List itemStacks) {
+    public void displayAllReleventItems(List<ItemStack> itemStacks) {
         super.displayAllReleventItems(itemStacks);
         for (ItemStack hatch : HatchRegistration.getRegisteredHatches()
             .values()) {
