@@ -28,10 +28,10 @@ item.appeu.eu_storage_cell.invalid.name=Invalid EU Storage Cell
 appeu.stack.eu=EU Energy
 
 # Hatch descriptions
-appeu.hatch.energy.desc=Draws EU from the ME network into the local buffer\nLocal buffer: %s EU\nConsumes 1 AE/t\nUses 1 ME channel
-appeu.hatch.dynamo.desc=Supplies EU from the local buffer to the ME network\nLocal buffer: %s EU\nConsumes 1 AE/t\nUses 1 ME channel
-appeu.hatch.energy_laser.desc=Draws EU from the ME network into the local buffer\nLocal buffer: %s EU\nConsumes 1 AE/t\nUses 1 ME channel\nTransfer current is adjustable with a screwdriver
-appeu.hatch.dynamo_laser.desc=Supplies EU from the local buffer to the ME network\nLocal buffer: %s EU\nConsumes 1 AE/t\nUses 1 ME channel\nTransfer current is adjustable with a screwdriver
+appeu.hatch.energy.desc=Energy Injector for Multiblocks via the ME Network
+appeu.hatch.dynamo.desc=Generating Electric Energy from Multiblocks via the ME Network
+appeu.hatch.energy_laser.desc=Energy Injector for Multiblocks via the ME Network
+appeu.hatch.dynamo_laser.desc=Generating Electric Energy from Multiblocks via the ME Network
 
 # ME energy hatches
 gt.blockmachines.appeu.hatch.energy.lv.2a.name=LV ME Energy Hatch

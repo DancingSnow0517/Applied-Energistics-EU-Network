@@ -1,6 +1,5 @@
 package cn.dancingsnow.appeu.hatch;
 
-import static com.gtnewhorizon.gtnhlib.util.numberformatting.NumberFormatUtil.formatNumber;
 import static gregtech.api.enums.GTValues.V;
 
 import net.minecraft.nbt.NBTTagCompound;
@@ -16,16 +15,20 @@ import cn.dancingsnow.appeu.client.AppEUTextures;
 import cn.dancingsnow.appeu.hatch.transfer.EnergyPort;
 import cn.dancingsnow.appeu.hatch.transfer.EnergyTransfer;
 import cn.dancingsnow.appeu.hatch.transfer.MEHatchTransferPolicy;
+import gregtech.api.interfaces.IHideTooltipEnergyInfo;
 import gregtech.api.interfaces.IMEConnectable;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.MetaTileEntity;
-import gregtech.api.metatileentity.implementations.MTEHatch;
 import gregtech.api.metatileentity.implementations.MTEHatchEnergy;
+import gregtech.api.util.GTSplit;
+import gregtech.api.util.GTUtility;
+import gregtech.api.util.tooltip.TooltipHelper;
 
 @IMetaTileEntity.SkipGenerateDescription
-public class MTEHatchMEEnergy extends MTEHatchEnergy implements IGridProxyable, IMEConnectable, IPowerChannelState {
+public class MTEHatchMEEnergy extends MTEHatchEnergy
+    implements IGridProxyable, IMEConnectable, IPowerChannelState, IHideTooltipEnergyInfo {
 
     private static final int AMPERAGE = 2;
 
@@ -95,8 +98,9 @@ public class MTEHatchMEEnergy extends MTEHatchEnergy implements IGridProxyable, 
 
     @Override
     public String[] getDescription() {
-        return MTEHatch
-            .formatEnergyInfoDesc(false, mTier, AMPERAGE, "appeu.hatch.energy.desc", formatNumber(maxEUStore()));
+        return GTSplit.splitLocalizedWithSuffix(
+            "appeu.hatch.dynamo.desc",
+            new String[] { GTUtility.translate("gt.tileentity.eup_in", TooltipHelper.voltageText(maxEUInput())) });
     }
 
     @Override

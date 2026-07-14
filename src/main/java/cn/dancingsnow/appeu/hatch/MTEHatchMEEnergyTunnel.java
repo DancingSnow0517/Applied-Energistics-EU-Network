@@ -1,6 +1,5 @@
 package cn.dancingsnow.appeu.hatch;
 
-import static com.gtnewhorizon.gtnhlib.util.numberformatting.NumberFormatUtil.formatNumber;
 import static gregtech.api.enums.GTValues.V;
 import static net.minecraft.util.StatCollector.translateToLocal;
 
@@ -99,8 +98,7 @@ public class MTEHatchMEEnergyTunnel extends MTEHatchEnergyTunnel
             false,
             mTier,
             maxAmperes,
-            "appeu.hatch.energy_laser.desc",
-            formatNumber(maxEUStore()));
+            "appeu.hatch.energy_laser.desc");
     }
 
     @Override

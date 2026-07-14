@@ -28,10 +28,10 @@ item.appeu.eu_storage_cell.invalid.name=无效的 EU 存储单元
 appeu.stack.eu=EU 能源
 
 # Hatch descriptions
-appeu.hatch.energy.desc=从 ME 网络向本地缓存输入 EU\n本地缓存：%s EU\n消耗 1 AE/t\n占用 1 个 ME 频道
-appeu.hatch.dynamo.desc=从本地缓存向 ME 网络输出 EU\n本地缓存：%s EU\n消耗 1 AE/t\n占用 1 个 ME 频道
-appeu.hatch.energy_laser.desc=从 ME 网络向本地缓存输入 EU\n本地缓存：%s EU\n消耗 1 AE/t\n占用 1 个 ME 频道\n可使用螺丝刀调节传输电流
-appeu.hatch.dynamo_laser.desc=从本地缓存向 ME 网络输出 EU\n本地缓存：%s EU\n消耗 1 AE/t\n占用 1 个 ME 频道\n可使用螺丝刀调节传输电流
+appeu.hatch.energy.desc=通过 ME 网络为多方块机器提供能源
+appeu.hatch.dynamo.desc=通过 ME 网络接受多方块机器生产的能量
+appeu.hatch.energy_laser.desc=通过 ME 网络为多方块机器提供能源
+appeu.hatch.dynamo_laser.desc=通过 ME 网络接受多方块机器生产的能量
 
 # ME energy hatches
 gt.blockmachines.appeu.hatch.energy.lv.2a.name=LV ME 能源仓

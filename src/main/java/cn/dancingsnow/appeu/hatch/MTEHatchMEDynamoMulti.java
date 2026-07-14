@@ -1,6 +1,5 @@
 package cn.dancingsnow.appeu.hatch;
 
-import static com.gtnewhorizon.gtnhlib.util.numberformatting.NumberFormatUtil.formatNumber;
 import static gregtech.api.enums.GTValues.V;
 
 import net.minecraft.nbt.NBTTagCompound;
@@ -116,8 +115,7 @@ public class MTEHatchMEDynamoMulti extends MTEHatchDynamoMulti
 
     @Override
     public String[] getDescription() {
-        return MTEHatch
-            .formatEnergyInfoDesc(true, mTier, fixedAmperage, "appeu.hatch.dynamo.desc", formatNumber(maxEUStore()));
+        return MTEHatch.formatEnergyInfoDesc(true, mTier, fixedAmperage, "appeu.hatch.dynamo.desc");
     }
 
     @Override
