@@ -25,8 +25,8 @@ class MEHatchTransferPolicyTest {
 
     @Test
     void supportsHighestDefaultLaserWithoutOverflow() {
-        assertEquals(11_258_999_068_426_240L, MEHatchTransferPolicy.batchSize(536_870_912L, 1_048_576L));
-        assertEquals(22_517_998_136_852_480L, MEHatchTransferPolicy.bufferCapacity(536_870_912L, 1_048_576L));
+        assertEquals(45_035_996_105_932_800L, MEHatchTransferPolicy.batchSize(2_147_483_640L, 1_048_576L));
+        assertEquals(90_071_992_211_865_600L, MEHatchTransferPolicy.bufferCapacity(2_147_483_640L, 1_048_576L));
     }
 
     @Test

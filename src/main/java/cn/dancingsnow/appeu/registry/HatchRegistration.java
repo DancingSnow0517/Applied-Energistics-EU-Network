@@ -163,6 +163,7 @@ public final class HatchRegistration {
                 if (stack == null) {
                     throw new IllegalStateException("getStackForm(1) returned null");
                 }
+                ModItems.setHatch(spec, stack);
                 REGISTERED_IDS.put(spec.id(), spec.name());
                 REGISTERED_HATCHES.put(spec.name(), stack.copy());
             } catch (RuntimeException | LinkageError exception) {
@@ -216,13 +217,11 @@ public final class HatchRegistration {
     private static String regionalName(HatchSpec spec) {
         String tierName = VN[spec.tier()];
         if (spec.family() == HatchFamily.LASER) {
-            return new StringBuilder().append(spec.amperage())
-                .append("A ")
-                .append(tierName)
-                .append(" ME Laser ")
-                .append(spec.direction() == HatchDirection.ENERGY ? "Target" : "Source")
-                .append(" Hatch")
-                .toString();
+            return spec.amperage() + "A "
+                + tierName
+                + " ME Laser "
+                + (spec.direction() == HatchDirection.ENERGY ? "Target" : "Source")
+                + " Hatch";
         }
         StringBuilder name = new StringBuilder();
         if (spec.amperage() != 2) {

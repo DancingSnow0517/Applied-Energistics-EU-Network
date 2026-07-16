@@ -10,14 +10,17 @@ import java.util.Set;
 
 public final class HatchSpecs {
 
-    private static final String[] TIER_LABELS = { "lv", "mv", "hv", "ev", "iv", "luv", "zpm", "uv", "uhv", "uev", "uiv",
-        "umv", "uxv" };
+    private static final String[] TIER_LABELS = { "ulv", "lv", "mv", "hv", "ev", "iv", "luv", "zpm", "uv", "uhv", "uev",
+        "uiv", "umv", "uxv", "max" };
     private static final int[] STANDARD_AMPERAGES = { 2, 4, 16, 64 };
     private static final int[] DEFAULT_LASER_AMPERAGES = { 256, 1_024, 4_096, 16_384, 65_536, 262_144, 1_048_576 };
     private static final HatchDirection[] DIRECTIONS = { HatchDirection.DYNAMO, HatchDirection.ENERGY };
 
+    public static final int MIN_TIER = 0;
+    public static final int MIN_LASER_TIER = 5;
+    public static final int MAX_TIER = TIER_LABELS.length - 1;
     public static final int DEFAULT_HATCH_COUNT = STANDARD_AMPERAGES.length * TIER_LABELS.length * DIRECTIONS.length
-        + DEFAULT_LASER_AMPERAGES.length * (TIER_LABELS.length - 4) * DIRECTIONS.length;
+        + DEFAULT_LASER_AMPERAGES.length * (MAX_TIER - MIN_LASER_TIER + 1) * DIRECTIONS.length;
 
     private HatchSpecs() {}
 
@@ -33,7 +36,7 @@ public final class HatchSpecs {
         List<HatchSpec> specs = new ArrayList<>();
         for (int amperage : STANDARD_AMPERAGES) {
             for (HatchDirection direction : DIRECTIONS) {
-                for (int tier = 1; tier <= TIER_LABELS.length; tier++) {
+                for (int tier = MIN_TIER; tier <= MAX_TIER; tier++) {
                     add(specs, start, tier, amperage, direction);
                 }
             }
@@ -52,7 +55,7 @@ public final class HatchSpecs {
 
         List<HatchSpec> specs = new ArrayList<>();
         for (HatchDirection direction : DIRECTIONS) {
-            for (int tier = 5; tier <= TIER_LABELS.length; tier++) {
+            for (int tier = MIN_LASER_TIER; tier <= MAX_TIER; tier++) {
                 add(specs, startId, tier, amperage, direction);
             }
         }
@@ -75,7 +78,7 @@ public final class HatchSpecs {
 
     private static String name(HatchDirection direction, int tier, int amperage) {
         return "appeu.hatch." + direction.name()
-            .toLowerCase(Locale.ROOT) + '.' + TIER_LABELS[tier - 1] + '.' + amperage + 'a';
+            .toLowerCase(Locale.ROOT) + '.' + TIER_LABELS[tier] + '.' + amperage + 'a';
     }
 
     private static void validateStart(int start) {

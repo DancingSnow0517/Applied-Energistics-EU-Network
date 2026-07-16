@@ -28,8 +28,8 @@ import tectech.thing.metaTileEntity.hatch.MTEHatchEnergyTunnel;
 public class MTEHatchMEEnergyTunnel extends MTEHatchEnergyTunnel
     implements IGridProxyable, IMEConnectable, IPowerChannelState {
 
-    private static final int MIN_TIER = 5;
-    private static final int MAX_TIER = 13;
+    private static final int MIN_TIER = HatchSpecs.MIN_LASER_TIER;
+    private static final int MAX_TIER = HatchSpecs.MAX_TIER;
     private static final int MIN_AMPERAGE = 256;
 
     private final MEHatchConnection connection = new MEHatchConnection(
@@ -192,7 +192,7 @@ public class MTEHatchMEEnergyTunnel extends MTEHatchEnergyTunnel
 
     private static int validateTier(int tier) {
         if (tier < MIN_TIER || tier > MAX_TIER) {
-            throw new IllegalArgumentException("ME laser hatch tier must be IV through UXV: " + tier);
+            throw new IllegalArgumentException("ME laser hatch tier must be IV through MAX: " + tier);
         }
         return tier;
     }
