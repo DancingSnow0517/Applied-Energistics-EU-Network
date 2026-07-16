@@ -26,105 +26,371 @@ public final class RecipeRegistration {
 
     private RecipeRegistration() {}
 
-    private static final Materials[] circuitMaterials = new Materials[] { Materials.ULV, Materials.LV, Materials.MV,
-        Materials.HV, Materials.EV, Materials.IV, Materials.LuV, Materials.ZPM, Materials.UV, Materials.UHV,
-        Materials.UEV, Materials.UIV, Materials.UMV, Materials.UXV };
+    // spotless:off
+    private static final Materials[] circuitMaterials = new Materials[]{
+        Materials.ULV,
+        Materials.LV,
+        Materials.MV,
+        Materials.HV,
+        Materials.EV,
+        Materials.IV,
+        Materials.LuV,
+        Materials.ZPM,
+        Materials.UV,
+        Materials.UHV,
+        Materials.UEV,
+        Materials.UIV,
+        Materials.UMV,
+        Materials.UXV
+    };
 
-    private static final FluidStack[] tierFluids = new FluidStack[] { Materials.Bronze.getMolten(1),
-        Materials.Tin.getMolten(1), Materials.Cupronickel.getMolten(1), Materials.Kanthal.getMolten(1),
-        Materials.Nichrome.getMolten(1), Materials.TPV.getMolten(1), Materials.HSSG.getMolten(1),
-        Materials.HSSS.getMolten(1), Materials.Naquadah.getMolten(1), Materials.NaquadahAlloy.getMolten(1),
-        Materials.Trinium.getMolten(1), Materials.ElectrumFlux.getMolten(1), Materials.DraconiumAwakened.getMolten(1),
-        Materials.Infinity.getMolten(1), MaterialsElements.getInstance().HYDROGEN.getFluidStack(1) };
+    private static final FluidStack[] tierFluids = new FluidStack[]{
+        Materials.Bronze.getMolten(1),
+        Materials.Tin.getMolten(1),
+        Materials.Cupronickel.getMolten(1),
+        Materials.Kanthal.getMolten(1),
+        Materials.Nichrome.getMolten(1),
+        Materials.TPV.getMolten(1),
+        Materials.HSSG.getMolten(1),
+        Materials.HSSS.getMolten(1),
+        Materials.Naquadah.getMolten(1),
+        Materials.NaquadahAlloy.getMolten(1),
+        Materials.Trinium.getMolten(1),
+        Materials.ElectrumFlux.getMolten(1),
+        Materials.DraconiumAwakened.getMolten(1),
+        Materials.Infinity.getMolten(1),
+        MaterialsElements.getInstance().HYDROGEN.getFluidStack(1)
+    };
 
-    private static final IItemContainer[] multiEnergyHatch4A = new IItemContainer[] { null, null, null, null,
-        CustomItemList.eM_energyMulti4_EV, CustomItemList.eM_energyMulti4_IV, CustomItemList.eM_energyMulti4_LuV,
-        CustomItemList.eM_energyMulti4_ZPM, CustomItemList.eM_energyMulti4_UV, CustomItemList.eM_energyMulti4_UHV,
-        CustomItemList.eM_energyMulti4_UEV, CustomItemList.eM_energyMulti4_UIV, CustomItemList.eM_energyMulti4_UMV,
-        CustomItemList.eM_energyMulti4_UXV, };
-    private static final IItemContainer[] multiEnergyHatch16A = new IItemContainer[] { null, null, null, null,
-        CustomItemList.eM_energyMulti16_EV, CustomItemList.eM_energyMulti16_IV, CustomItemList.eM_energyMulti16_LuV,
-        CustomItemList.eM_energyMulti16_ZPM, CustomItemList.eM_energyMulti16_UV, CustomItemList.eM_energyMulti16_UHV,
-        CustomItemList.eM_energyMulti16_UEV, CustomItemList.eM_energyMulti16_UIV, CustomItemList.eM_energyMulti16_UMV,
-        CustomItemList.eM_energyMulti16_UXV, };
+    private static final IItemContainer[] multiEnergyHatch4A = new IItemContainer[]{
+        null,
+        null,
+        null,
+        null,
+        CustomItemList.eM_energyMulti4_EV,
+        CustomItemList.eM_energyMulti4_IV,
+        CustomItemList.eM_energyMulti4_LuV,
+        CustomItemList.eM_energyMulti4_ZPM,
+        CustomItemList.eM_energyMulti4_UV,
+        CustomItemList.eM_energyMulti4_UHV,
+        CustomItemList.eM_energyMulti4_UEV,
+        CustomItemList.eM_energyMulti4_UIV,
+        CustomItemList.eM_energyMulti4_UMV,
+        CustomItemList.eM_energyMulti4_UXV,
+    };
+    private static final IItemContainer[] multiEnergyHatch16A = new IItemContainer[]{
+        null,
+        null,
+        null,
+        null,
+        CustomItemList.eM_energyMulti16_EV,
+        CustomItemList.eM_energyMulti16_IV,
+        CustomItemList.eM_energyMulti16_LuV,
+        CustomItemList.eM_energyMulti16_ZPM,
+        CustomItemList.eM_energyMulti16_UV,
+        CustomItemList.eM_energyMulti16_UHV,
+        CustomItemList.eM_energyMulti16_UEV,
+        CustomItemList.eM_energyMulti16_UIV,
+        CustomItemList.eM_energyMulti16_UMV,
+        CustomItemList.eM_energyMulti16_UXV,
+    };
 
-    private static final IItemContainer[] multiEnergyHatch64A = new IItemContainer[] { null, null, null, null,
-        CustomItemList.eM_energyMulti64_EV, CustomItemList.eM_energyMulti64_IV, CustomItemList.eM_energyMulti64_LuV,
-        CustomItemList.eM_energyMulti64_ZPM, CustomItemList.eM_energyMulti64_UV, CustomItemList.eM_energyMulti64_UHV,
-        CustomItemList.eM_energyMulti64_UEV, CustomItemList.eM_energyMulti64_UIV, CustomItemList.eM_energyMulti64_UMV,
-        CustomItemList.eM_energyMulti64_UXV, };
+    private static final IItemContainer[] multiEnergyHatch64A = new IItemContainer[]{
+        null,
+        null,
+        null,
+        null,
+        CustomItemList.eM_energyMulti64_EV,
+        CustomItemList.eM_energyMulti64_IV,
+        CustomItemList.eM_energyMulti64_LuV,
+        CustomItemList.eM_energyMulti64_ZPM,
+        CustomItemList.eM_energyMulti64_UV,
+        CustomItemList.eM_energyMulti64_UHV,
+        CustomItemList.eM_energyMulti64_UEV,
+        CustomItemList.eM_energyMulti64_UIV,
+        CustomItemList.eM_energyMulti64_UMV,
+        CustomItemList.eM_energyMulti64_UXV,
+    };
 
-    private static final IItemContainer[] multiDynamoHatch4A = new IItemContainer[] { null, null, null, null,
-        CustomItemList.eM_dynamoMulti4_EV, CustomItemList.eM_dynamoMulti4_IV, CustomItemList.eM_dynamoMulti4_LuV,
-        CustomItemList.eM_dynamoMulti4_ZPM, CustomItemList.eM_dynamoMulti4_UV, CustomItemList.eM_dynamoMulti4_UHV,
-        CustomItemList.eM_dynamoMulti4_UEV, CustomItemList.eM_dynamoMulti4_UIV, CustomItemList.eM_dynamoMulti4_UMV,
-        CustomItemList.eM_dynamoMulti4_UXV, };
-    private static final IItemContainer[] multiDynamoHatch16A = new IItemContainer[] { null, null, null, null,
-        CustomItemList.eM_dynamoMulti16_EV, CustomItemList.eM_dynamoMulti16_IV, CustomItemList.eM_dynamoMulti16_LuV,
-        CustomItemList.eM_dynamoMulti16_ZPM, CustomItemList.eM_dynamoMulti16_UV, CustomItemList.eM_dynamoMulti16_UHV,
-        CustomItemList.eM_dynamoMulti16_UEV, CustomItemList.eM_dynamoMulti16_UIV, CustomItemList.eM_dynamoMulti16_UMV,
-        CustomItemList.eM_dynamoMulti16_UXV, };
+    private static final IItemContainer[] multiDynamoHatch4A = new IItemContainer[]{
+        null,
+        null,
+        null,
+        null,
+        CustomItemList.eM_dynamoMulti4_EV,
+        CustomItemList.eM_dynamoMulti4_IV,
+        CustomItemList.eM_dynamoMulti4_LuV,
+        CustomItemList.eM_dynamoMulti4_ZPM,
+        CustomItemList.eM_dynamoMulti4_UV,
+        CustomItemList.eM_dynamoMulti4_UHV,
+        CustomItemList.eM_dynamoMulti4_UEV,
+        CustomItemList.eM_dynamoMulti4_UIV,
+        CustomItemList.eM_dynamoMulti4_UMV,
+        CustomItemList.eM_dynamoMulti4_UXV,
+    };
+    private static final IItemContainer[] multiDynamoHatch16A = new IItemContainer[]{
+        null,
+        null,
+        null,
+        null,
+        CustomItemList.eM_dynamoMulti16_EV,
+        CustomItemList.eM_dynamoMulti16_IV,
+        CustomItemList.eM_dynamoMulti16_LuV,
+        CustomItemList.eM_dynamoMulti16_ZPM,
+        CustomItemList.eM_dynamoMulti16_UV,
+        CustomItemList.eM_dynamoMulti16_UHV,
+        CustomItemList.eM_dynamoMulti16_UEV,
+        CustomItemList.eM_dynamoMulti16_UIV,
+        CustomItemList.eM_dynamoMulti16_UMV,
+        CustomItemList.eM_dynamoMulti16_UXV,
+    };
 
-    private static final IItemContainer[] multiDynamoHatch64A = new IItemContainer[] { null, null, null, null,
-        CustomItemList.eM_dynamoMulti64_EV, CustomItemList.eM_dynamoMulti64_IV, CustomItemList.eM_dynamoMulti64_LuV,
-        CustomItemList.eM_dynamoMulti64_ZPM, CustomItemList.eM_dynamoMulti64_UV, CustomItemList.eM_dynamoMulti64_UHV,
-        CustomItemList.eM_dynamoMulti64_UEV, CustomItemList.eM_dynamoMulti64_UIV, CustomItemList.eM_dynamoMulti64_UMV,
-        CustomItemList.eM_dynamoMulti64_UXV, };
+    private static final IItemContainer[] multiDynamoHatch64A = new IItemContainer[]{
+        null,
+        null,
+        null,
+        null,
+        CustomItemList.eM_dynamoMulti64_EV,
+        CustomItemList.eM_dynamoMulti64_IV,
+        CustomItemList.eM_dynamoMulti64_LuV,
+        CustomItemList.eM_dynamoMulti64_ZPM,
+        CustomItemList.eM_dynamoMulti64_UV,
+        CustomItemList.eM_dynamoMulti64_UHV,
+        CustomItemList.eM_dynamoMulti64_UEV,
+        CustomItemList.eM_dynamoMulti64_UIV,
+        CustomItemList.eM_dynamoMulti64_UMV,
+        CustomItemList.eM_dynamoMulti64_UXV,
+    };
 
-    private static final IItemContainer[] energyTunnel256A = new IItemContainer[] { null, null, null, null, null,
-        CustomItemList.eM_energyTunnel1_IV, CustomItemList.eM_energyTunnel1_LuV, CustomItemList.eM_energyTunnel1_ZPM,
-        CustomItemList.eM_energyTunnel1_UV, CustomItemList.eM_energyTunnel1_UHV, CustomItemList.eM_energyTunnel1_UEV,
-        CustomItemList.eM_energyTunnel1_UIV, CustomItemList.eM_energyTunnel1_UMV, CustomItemList.eM_energyTunnel1_UXV };
+    private static final IItemContainer[] energyTunnel256A = new IItemContainer[]{
+        null,
+        null,
+        null,
+        null,
+        null,
+        CustomItemList.eM_energyTunnel1_IV,
+        CustomItemList.eM_energyTunnel1_LuV,
+        CustomItemList.eM_energyTunnel1_ZPM,
+        CustomItemList.eM_energyTunnel1_UV,
+        CustomItemList.eM_energyTunnel1_UHV,
+        CustomItemList.eM_energyTunnel1_UEV,
+        CustomItemList.eM_energyTunnel1_UIV,
+        CustomItemList.eM_energyTunnel1_UMV,
+        CustomItemList.eM_energyTunnel1_UXV
+    };
 
-    private static final IItemContainer[] energyTunnel1024A = new IItemContainer[] { null, null, null, null, null, null,
-        CustomItemList.eM_energyTunnel2_LuV, CustomItemList.eM_energyTunnel2_ZPM, CustomItemList.eM_energyTunnel2_UV,
-        CustomItemList.eM_energyTunnel2_UHV, CustomItemList.eM_energyTunnel2_UEV, CustomItemList.eM_energyTunnel2_UIV,
-        CustomItemList.eM_energyTunnel2_UMV, CustomItemList.eM_energyTunnel2_UXV };
+    private static final IItemContainer[] energyTunnel1024A = new IItemContainer[]{
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        CustomItemList.eM_energyTunnel2_LuV,
+        CustomItemList.eM_energyTunnel2_ZPM,
+        CustomItemList.eM_energyTunnel2_UV,
+        CustomItemList.eM_energyTunnel2_UHV,
+        CustomItemList.eM_energyTunnel2_UEV,
+        CustomItemList.eM_energyTunnel2_UIV,
+        CustomItemList.eM_energyTunnel2_UMV,
+        CustomItemList.eM_energyTunnel2_UXV
+    };
 
-    private static final IItemContainer[] energyTunnel4096A = new IItemContainer[] { null, null, null, null, null, null,
-        null, CustomItemList.eM_energyTunnel3_ZPM, CustomItemList.eM_energyTunnel3_UV,
-        CustomItemList.eM_energyTunnel3_UHV, CustomItemList.eM_energyTunnel3_UEV, CustomItemList.eM_energyTunnel3_UIV,
-        CustomItemList.eM_energyTunnel3_UMV, CustomItemList.eM_energyTunnel3_UXV };
-    private static final IItemContainer[] energyTunnel16384A = new IItemContainer[] { null, null, null, null, null,
-        null, null, null, CustomItemList.eM_energyTunnel4_UV, CustomItemList.eM_energyTunnel4_UHV,
-        CustomItemList.eM_energyTunnel4_UEV, CustomItemList.eM_energyTunnel4_UIV, CustomItemList.eM_energyTunnel4_UMV,
-        CustomItemList.eM_energyTunnel4_UXV };
-    private static final IItemContainer[] energyTunnel65536A = new IItemContainer[] { null, null, null, null, null,
-        null, null, null, null, CustomItemList.eM_energyTunnel5_UHV, CustomItemList.eM_energyTunnel5_UEV,
-        CustomItemList.eM_energyTunnel5_UIV, CustomItemList.eM_energyTunnel5_UMV, CustomItemList.eM_energyTunnel5_UXV };
-    private static final IItemContainer[] energyTunnel262144A = new IItemContainer[] { null, null, null, null, null,
-        null, null, null, null, null, CustomItemList.eM_energyTunnel6_UEV, CustomItemList.eM_energyTunnel6_UIV,
-        CustomItemList.eM_energyTunnel6_UMV, CustomItemList.eM_energyTunnel6_UXV };
-    private static final IItemContainer[] energyTunnel1048576A = new IItemContainer[] { null, null, null, null, null,
-        null, null, null, null, null, null, CustomItemList.eM_energyTunnel7_UIV, CustomItemList.eM_energyTunnel7_UMV,
-        CustomItemList.eM_energyTunnel7_UXV };
-    private static final IItemContainer[] dynamoTunnel256A = new IItemContainer[] { null, null, null, null, null,
-        CustomItemList.eM_dynamoTunnel1_IV, CustomItemList.eM_dynamoTunnel1_LuV, CustomItemList.eM_dynamoTunnel1_ZPM,
-        CustomItemList.eM_dynamoTunnel1_UV, CustomItemList.eM_dynamoTunnel1_UHV, CustomItemList.eM_dynamoTunnel1_UEV,
-        CustomItemList.eM_dynamoTunnel1_UIV, CustomItemList.eM_dynamoTunnel1_UMV, CustomItemList.eM_dynamoTunnel1_UXV };
+    private static final IItemContainer[] energyTunnel4096A = new IItemContainer[]{
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        CustomItemList.eM_energyTunnel3_ZPM,
+        CustomItemList.eM_energyTunnel3_UV,
+        CustomItemList.eM_energyTunnel3_UHV,
+        CustomItemList.eM_energyTunnel3_UEV,
+        CustomItemList.eM_energyTunnel3_UIV,
+        CustomItemList.eM_energyTunnel3_UMV,
+        CustomItemList.eM_energyTunnel3_UXV
+    };
+    private static final IItemContainer[] energyTunnel16384A = new IItemContainer[]{
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        CustomItemList.eM_energyTunnel4_UV,
+        CustomItemList.eM_energyTunnel4_UHV,
+        CustomItemList.eM_energyTunnel4_UEV,
+        CustomItemList.eM_energyTunnel4_UIV,
+        CustomItemList.eM_energyTunnel4_UMV,
+        CustomItemList.eM_energyTunnel4_UXV
+    };
+    private static final IItemContainer[] energyTunnel65536A = new IItemContainer[]{
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        CustomItemList.eM_energyTunnel5_UHV,
+        CustomItemList.eM_energyTunnel5_UEV,
+        CustomItemList.eM_energyTunnel5_UIV,
+        CustomItemList.eM_energyTunnel5_UMV,
+        CustomItemList.eM_energyTunnel5_UXV
+    };
+    private static final IItemContainer[] energyTunnel262144A = new IItemContainer[]{
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        CustomItemList.eM_energyTunnel6_UEV,
+        CustomItemList.eM_energyTunnel6_UIV,
+        CustomItemList.eM_energyTunnel6_UMV,
+        CustomItemList.eM_energyTunnel6_UXV
+    };
+    private static final IItemContainer[] energyTunnel1048576A = new IItemContainer[]{
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        CustomItemList.eM_energyTunnel7_UIV,
+        CustomItemList.eM_energyTunnel7_UMV,
+        CustomItemList.eM_energyTunnel7_UXV
+    };
+    private static final IItemContainer[] dynamoTunnel256A = new IItemContainer[]{
+        null,
+        null,
+        null,
+        null,
+        null,
+        CustomItemList.eM_dynamoTunnel1_IV,
+        CustomItemList.eM_dynamoTunnel1_LuV,
+        CustomItemList.eM_dynamoTunnel1_ZPM,
+        CustomItemList.eM_dynamoTunnel1_UV,
+        CustomItemList.eM_dynamoTunnel1_UHV,
+        CustomItemList.eM_dynamoTunnel1_UEV,
+        CustomItemList.eM_dynamoTunnel1_UIV,
+        CustomItemList.eM_dynamoTunnel1_UMV,
+        CustomItemList.eM_dynamoTunnel1_UXV
+    };
 
-    private static final IItemContainer[] dynamoTunnel1024A = new IItemContainer[] { null, null, null, null, null, null,
-        CustomItemList.eM_dynamoTunnel2_LuV, CustomItemList.eM_dynamoTunnel2_ZPM, CustomItemList.eM_dynamoTunnel2_UV,
-        CustomItemList.eM_dynamoTunnel2_UHV, CustomItemList.eM_dynamoTunnel2_UEV, CustomItemList.eM_dynamoTunnel2_UIV,
-        CustomItemList.eM_dynamoTunnel2_UMV, CustomItemList.eM_dynamoTunnel2_UXV };
+    private static final IItemContainer[] dynamoTunnel1024A = new IItemContainer[]{
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        CustomItemList.eM_dynamoTunnel2_LuV,
+        CustomItemList.eM_dynamoTunnel2_ZPM,
+        CustomItemList.eM_dynamoTunnel2_UV,
+        CustomItemList.eM_dynamoTunnel2_UHV,
+        CustomItemList.eM_dynamoTunnel2_UEV,
+        CustomItemList.eM_dynamoTunnel2_UIV,
+        CustomItemList.eM_dynamoTunnel2_UMV,
+        CustomItemList.eM_dynamoTunnel2_UXV
+    };
 
-    private static final IItemContainer[] dynamoTunnel4096A = new IItemContainer[] { null, null, null, null, null, null,
-        null, CustomItemList.eM_dynamoTunnel3_ZPM, CustomItemList.eM_dynamoTunnel3_UV,
-        CustomItemList.eM_dynamoTunnel3_UHV, CustomItemList.eM_dynamoTunnel3_UEV, CustomItemList.eM_dynamoTunnel3_UIV,
-        CustomItemList.eM_dynamoTunnel3_UMV, CustomItemList.eM_dynamoTunnel3_UXV };
-    private static final IItemContainer[] dynamoTunnel16384A = new IItemContainer[] { null, null, null, null, null,
-        null, null, null, CustomItemList.eM_dynamoTunnel4_UV, CustomItemList.eM_dynamoTunnel4_UHV,
-        CustomItemList.eM_dynamoTunnel4_UEV, CustomItemList.eM_dynamoTunnel4_UIV, CustomItemList.eM_dynamoTunnel4_UMV,
-        CustomItemList.eM_dynamoTunnel4_UXV };
-    private static final IItemContainer[] dynamoTunnel65536A = new IItemContainer[] { null, null, null, null, null,
-        null, null, null, null, CustomItemList.eM_dynamoTunnel5_UHV, CustomItemList.eM_dynamoTunnel5_UEV,
-        CustomItemList.eM_dynamoTunnel5_UIV, CustomItemList.eM_dynamoTunnel5_UMV, CustomItemList.eM_dynamoTunnel5_UXV };
-    private static final IItemContainer[] dynamoTunnel262144A = new IItemContainer[] { null, null, null, null, null,
-        null, null, null, null, null, CustomItemList.eM_dynamoTunnel6_UEV, CustomItemList.eM_dynamoTunnel6_UIV,
-        CustomItemList.eM_dynamoTunnel6_UMV, CustomItemList.eM_dynamoTunnel6_UXV };
-    private static final IItemContainer[] dynamoTunnel1048576A = new IItemContainer[] { null, null, null, null, null,
-        null, null, null, null, null, null, CustomItemList.eM_dynamoTunnel7_UIV, CustomItemList.eM_dynamoTunnel7_UMV,
-        CustomItemList.eM_dynamoTunnel7_UXV };
+    private static final IItemContainer[] dynamoTunnel4096A = new IItemContainer[]{
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        CustomItemList.eM_dynamoTunnel3_ZPM,
+        CustomItemList.eM_dynamoTunnel3_UV,
+        CustomItemList.eM_dynamoTunnel3_UHV,
+        CustomItemList.eM_dynamoTunnel3_UEV,
+        CustomItemList.eM_dynamoTunnel3_UIV,
+        CustomItemList.eM_dynamoTunnel3_UMV,
+        CustomItemList.eM_dynamoTunnel3_UXV
+    };
+    private static final IItemContainer[] dynamoTunnel16384A = new IItemContainer[]{
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        CustomItemList.eM_dynamoTunnel4_UV,
+        CustomItemList.eM_dynamoTunnel4_UHV,
+        CustomItemList.eM_dynamoTunnel4_UEV,
+        CustomItemList.eM_dynamoTunnel4_UIV,
+        CustomItemList.eM_dynamoTunnel4_UMV,
+        CustomItemList.eM_dynamoTunnel4_UXV
+    };
+    private static final IItemContainer[] dynamoTunnel65536A = new IItemContainer[]{
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        CustomItemList.eM_dynamoTunnel5_UHV,
+        CustomItemList.eM_dynamoTunnel5_UEV,
+        CustomItemList.eM_dynamoTunnel5_UIV,
+        CustomItemList.eM_dynamoTunnel5_UMV,
+        CustomItemList.eM_dynamoTunnel5_UXV
+    };
+    private static final IItemContainer[] dynamoTunnel262144A = new IItemContainer[]{
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        CustomItemList.eM_dynamoTunnel6_UEV,
+        CustomItemList.eM_dynamoTunnel6_UIV,
+        CustomItemList.eM_dynamoTunnel6_UMV,
+        CustomItemList.eM_dynamoTunnel6_UXV
+    };
+    private static final IItemContainer[] dynamoTunnel1048576A = new IItemContainer[]{
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        CustomItemList.eM_dynamoTunnel7_UIV,
+        CustomItemList.eM_dynamoTunnel7_UMV,
+        CustomItemList.eM_dynamoTunnel7_UXV
+    };
+    // spotless:on
 
     public static void register() {
         registerHatchRecipes(ItemList.HATCHES_DYNAMO, ModItems.ME_DYNAMO_HATCH);
