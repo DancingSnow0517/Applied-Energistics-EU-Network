@@ -8,6 +8,7 @@ import static gregtech.api.util.GTRecipeConstants.RESEARCH_ITEM;
 import static gregtech.api.util.GTRecipeConstants.SCANNING;
 
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
 import appeng.api.AEApi;
@@ -19,7 +20,6 @@ import gregtech.api.interfaces.IItemContainer;
 import gregtech.api.util.GTRecipeBuilder;
 import gregtech.api.util.recipe.Scanning;
 import gtPlusPlus.core.material.MaterialsAlloy;
-import gtPlusPlus.core.material.MaterialsElements;
 import tectech.thing.CustomItemList;
 
 public final class RecipeRegistration {
@@ -45,7 +45,6 @@ public final class RecipeRegistration {
     };
 
     private static final FluidStack[] tierFluids = new FluidStack[]{
-        Materials.Bronze.getMolten(1),
         Materials.Tin.getMolten(1),
         Materials.Cupronickel.getMolten(1),
         Materials.Kanthal.getMolten(1),
@@ -59,7 +58,7 @@ public final class RecipeRegistration {
         Materials.ElectrumFlux.getMolten(1),
         Materials.DraconiumAwakened.getMolten(1),
         Materials.Infinity.getMolten(1),
-        MaterialsElements.getInstance().HYDROGEN.getFluidStack(1)
+        new FluidStack(FluidRegistry.getFluid("molten.hypogen"), 1)
     };
 
     private static final IItemContainer[] multiEnergyHatch4A = new IItemContainer[]{
