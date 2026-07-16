@@ -9,6 +9,7 @@ import cn.dancingsnow.appeu.registry.ModItems;
 import cn.dancingsnow.appeu.registry.RecipeRegistration;
 import cn.dancingsnow.appeu.registry.StorageRegistration;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 
 public class CommonProxy {
@@ -26,7 +27,10 @@ public class CommonProxy {
 
     public void init(FMLInitializationEvent event) {
         StorageRegistration.registerCellHandler();
-        RecipeRegistration.register();
         AppEU.LOG.info("Initialized {} version {}", AppEU.NAME, Tags.VERSION);
+    }
+
+    public void postInit(FMLPostInitializationEvent event) {
+        RecipeRegistration.register();
     }
 }
