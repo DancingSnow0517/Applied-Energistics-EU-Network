@@ -26,6 +26,7 @@ public final class RecipeRegistration {
 
     private RecipeRegistration() {}
 
+    // region static
     // spotless:off
     private static final Materials[] circuitMaterials = new Materials[]{
         Materials.ULV,
@@ -93,7 +94,6 @@ public final class RecipeRegistration {
         CustomItemList.eM_energyMulti16_UMV,
         CustomItemList.eM_energyMulti16_UXV,
     };
-
     private static final IItemContainer[] multiEnergyHatch64A = new IItemContainer[]{
         null,
         null,
@@ -110,7 +110,6 @@ public final class RecipeRegistration {
         CustomItemList.eM_energyMulti64_UMV,
         CustomItemList.eM_energyMulti64_UXV,
     };
-
     private static final IItemContainer[] multiDynamoHatch4A = new IItemContainer[]{
         null,
         null,
@@ -143,7 +142,6 @@ public final class RecipeRegistration {
         CustomItemList.eM_dynamoMulti16_UMV,
         CustomItemList.eM_dynamoMulti16_UXV,
     };
-
     private static final IItemContainer[] multiDynamoHatch64A = new IItemContainer[]{
         null,
         null,
@@ -160,7 +158,6 @@ public final class RecipeRegistration {
         CustomItemList.eM_dynamoMulti64_UMV,
         CustomItemList.eM_dynamoMulti64_UXV,
     };
-
     private static final IItemContainer[] energyTunnel256A = new IItemContainer[]{
         null,
         null,
@@ -177,7 +174,6 @@ public final class RecipeRegistration {
         CustomItemList.eM_energyTunnel1_UMV,
         CustomItemList.eM_energyTunnel1_UXV
     };
-
     private static final IItemContainer[] energyTunnel1024A = new IItemContainer[]{
         null,
         null,
@@ -194,7 +190,6 @@ public final class RecipeRegistration {
         CustomItemList.eM_energyTunnel2_UMV,
         CustomItemList.eM_energyTunnel2_UXV
     };
-
     private static final IItemContainer[] energyTunnel4096A = new IItemContainer[]{
         null,
         null,
@@ -291,7 +286,6 @@ public final class RecipeRegistration {
         CustomItemList.eM_dynamoTunnel1_UMV,
         CustomItemList.eM_dynamoTunnel1_UXV
     };
-
     private static final IItemContainer[] dynamoTunnel1024A = new IItemContainer[]{
         null,
         null,
@@ -308,7 +302,6 @@ public final class RecipeRegistration {
         CustomItemList.eM_dynamoTunnel2_UMV,
         CustomItemList.eM_dynamoTunnel2_UXV
     };
-
     private static final IItemContainer[] dynamoTunnel4096A = new IItemContainer[]{
         null,
         null,
@@ -390,6 +383,7 @@ public final class RecipeRegistration {
         CustomItemList.eM_dynamoTunnel7_UXV
     };
     // spotless:on
+    // endregion
 
     public static void register() {
         registerHatchRecipes(ItemList.HATCHES_DYNAMO, ModItems.ME_DYNAMO_HATCH);
