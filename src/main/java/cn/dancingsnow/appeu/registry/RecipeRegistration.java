@@ -1,28 +1,45 @@
 package cn.dancingsnow.appeu.registry;
 
 import static gregtech.api.recipe.RecipeMaps.assemblerRecipes;
+import static gregtech.api.recipe.RecipeMaps.circuitAssemblerRecipes;
+import static gregtech.api.util.GTRecipeBuilder.HALF_INGOTS;
 import static gregtech.api.util.GTRecipeBuilder.INGOTS;
 import static gregtech.api.util.GTRecipeBuilder.MINUTES;
+import static gregtech.api.util.GTRecipeBuilder.PANIC_MODE_NULL;
+import static gregtech.api.util.GTRecipeBuilder.SECONDS;
 import static gregtech.api.util.GTRecipeConstants.AssemblyLine;
 import static gregtech.api.util.GTRecipeConstants.RESEARCH_ITEM;
 import static gregtech.api.util.GTRecipeConstants.SCANNING;
 
+import net.minecraft.init.Blocks;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
-import appeng.api.AEApi;
+import org.jetbrains.annotations.NotNull;
+
+import com.dreammaster.item.NHItemList;
+
+import cpw.mods.fml.common.registry.GameRegistry;
 import gregtech.api.enums.GTValues;
 import gregtech.api.enums.ItemList;
 import gregtech.api.enums.Materials;
 import gregtech.api.enums.OrePrefixes;
+import gregtech.api.enums.TierEU;
 import gregtech.api.interfaces.IItemContainer;
+import gregtech.api.objects.SubstituteFluidStack;
+import gregtech.api.util.GTModHandler;
+import gregtech.api.util.GTOreDictUnificator;
 import gregtech.api.util.GTRecipeBuilder;
 import gregtech.api.util.recipe.Scanning;
 import gtPlusPlus.core.material.MaterialsAlloy;
 import tectech.thing.CustomItemList;
 
 public final class RecipeRegistration {
+
+    public static final String AE2_ID = "appliedergistics2";
 
     private RecipeRegistration() {}
 
@@ -409,24 +426,129 @@ public final class RecipeRegistration {
         registerMultiHatchRecipes(energyTunnel262144A, ModItems.ME_ENERGY_HATCH_262144A, 10, 64);
         registerMultiHatchRecipes(dynamoTunnel1048576A, ModItems.ME_DYNAMO_HATCH_1048576A, 11, 64);
         registerMultiHatchRecipes(energyTunnel1048576A, ModItems.ME_ENERGY_HATCH_1048576A, 11, 64);
+
+        GTRecipeBuilder.builder()
+            .itemInputs(
+                GTOreDictUnificator.get(OrePrefixes.circuit, Materials.ULV, 2),
+                NHItemList.ChargedCertusQuartzDust.get(2),
+                ItemList.Battery_RE_LV_Lithium.get(1),
+                ItemList.Circuit_Board_Basic.get(1))
+            .fluidInputs(SubstituteFluidStack.soldering(HALF_INGOTS))
+            .itemOutputs(new ItemStack(ModItems.EU_STORAGE_COMPONENT, 1, 0))
+            .circuit(1)
+            .duration(10 * SECONDS)
+            .eut(TierEU.RECIPE_LV)
+            .addTo(circuitAssemblerRecipes);
+
+        GTRecipeBuilder.builder()
+            .itemInputs(
+                GTOreDictUnificator.get(OrePrefixes.circuit, Materials.LV, 4),
+                GTOreDictUnificator.get(OrePrefixes.circuit, Materials.ULV, 16),
+                ItemList.Battery_RE_MV_Lithium.get(1),
+                ItemList.Circuit_Board_Coated_Basic.get(1))
+            .fluidInputs(SubstituteFluidStack.soldering(HALF_INGOTS))
+            .itemOutputs(new ItemStack(ModItems.EU_STORAGE_COMPONENT, 1, 1))
+            .circuit(1)
+            .requiresCleanRoom()
+            .duration(10 * SECONDS)
+            .eut(TierEU.RECIPE_LV)
+            .addTo(circuitAssemblerRecipes);
+
+        GTRecipeBuilder.builder()
+            .itemInputs(
+                GTOreDictUnificator.get(OrePrefixes.circuit, Materials.MV, 4),
+                GTOreDictUnificator.get(OrePrefixes.circuit, Materials.LV, 16),
+                ItemList.Battery_RE_HV_Lithium.get(1),
+                ItemList.Circuit_Board_Phenolic_Good.get(1))
+            .fluidInputs(SubstituteFluidStack.soldering(HALF_INGOTS))
+            .itemOutputs(new ItemStack(ModItems.EU_STORAGE_COMPONENT, 1, 2))
+            .circuit(1)
+            .requiresCleanRoom()
+            .duration(10 * SECONDS)
+            .eut(TierEU.RECIPE_MV)
+            .addTo(circuitAssemblerRecipes);
+
+        GTRecipeBuilder.builder()
+            .itemInputs(
+                GTOreDictUnificator.get(OrePrefixes.circuit, Materials.HV, 4),
+                GTOreDictUnificator.get(OrePrefixes.circuit, Materials.LV, 16),
+                getModItem("IC2", "itemBatCrystal"),
+                ItemList.Circuit_Board_Epoxy_Advanced.get(1))
+            .fluidInputs(SubstituteFluidStack.soldering(HALF_INGOTS))
+            .itemOutputs(new ItemStack(ModItems.EU_STORAGE_COMPONENT, 1, 3))
+            .circuit(1)
+            .requiresCleanRoom()
+            .duration(10 * SECONDS)
+            .eut(TierEU.RECIPE_HV)
+            .addTo(circuitAssemblerRecipes);
+
+        GTRecipeBuilder.builder()
+            .itemInputs(
+                GTOreDictUnificator.get(OrePrefixes.circuit, Materials.EV, 4),
+                GTOreDictUnificator.get(OrePrefixes.circuit, Materials.HV, 16),
+                getModItem("IC2", "itemBatLamaCrystal"),
+                ItemList.Circuit_Board_Fiberglass_Advanced.get(1))
+            .fluidInputs(SubstituteFluidStack.soldering(HALF_INGOTS))
+            .itemOutputs(new ItemStack(ModItems.EU_STORAGE_COMPONENT, 1, 4))
+            .circuit(1)
+            .requiresCleanRoom()
+            .duration(10 * SECONDS)
+            .eut(TierEU.RECIPE_EV)
+            .addTo(circuitAssemblerRecipes);
+
+        GTRecipeBuilder.builder()
+            .itemInputs(
+                GTOreDictUnificator.get(OrePrefixes.circuit, Materials.IV, 4),
+                GTOreDictUnificator.get(OrePrefixes.circuit, Materials.EV, 16),
+                ItemList.Energy_LapotronicOrb.get(1),
+                ItemList.Circuit_Board_Multifiberglass_Elite.get(1))
+            .fluidInputs(SubstituteFluidStack.soldering(HALF_INGOTS))
+            .itemOutputs(new ItemStack(ModItems.EU_STORAGE_COMPONENT, 1, 5))
+            .circuit(1)
+            .requiresCleanRoom()
+            .duration(10 * SECONDS)
+            .eut(TierEU.RECIPE_IV)
+            .addTo(circuitAssemblerRecipes);
+
+        GTRecipeBuilder.builder()
+            .itemInputs(
+                GTOreDictUnificator.get(OrePrefixes.circuit, Materials.LuV, 4),
+                GTOreDictUnificator.get(OrePrefixes.circuit, Materials.IV, 16),
+                ItemList.Energy_Module.get(1),
+                ItemList.Circuit_Board_Wetware_Extreme.get(1))
+            .fluidInputs(SubstituteFluidStack.soldering(HALF_INGOTS))
+            .itemOutputs(new ItemStack(ModItems.EU_STORAGE_COMPONENT, 1, 6))
+            .circuit(1)
+            .requiresCleanRoom()
+            .duration(10 * SECONDS)
+            .eut(TierEU.RECIPE_LuV)
+            .addTo(circuitAssemblerRecipes);
+
+        GTRecipeBuilder.builder()
+            .itemInputs(
+                GTOreDictUnificator.get(OrePrefixes.circuit, Materials.UV, 4),
+                GTOreDictUnificator.get(OrePrefixes.circuit, Materials.LuV, 16),
+                ItemList.ZPM2.get(1),
+                ItemList.Circuit_Board_Plastic_Advanced.get(1))
+            .fluidInputs(SubstituteFluidStack.soldering(HALF_INGOTS))
+            .itemOutputs(new ItemStack(ModItems.EU_STORAGE_COMPONENT, 1, 7))
+            .circuit(1)
+            .requiresCleanRoom()
+            .duration(10 * SECONDS)
+            .eut(TierEU.RECIPE_UV)
+            .addTo(circuitAssemblerRecipes);
+
+        for (int meta = 0; meta <= 7; meta++) {
+            ItemStack cellHousing = new ItemStack(ModItems.EU_STORAGE_CELL_HOUSING, 1, meta < 4 ? 0 : 1);
+            GTModHandler.addShapelessCraftingRecipe(
+                new ItemStack(ModItems.EU_STORAGE_CELL, 1, meta),
+                new Object[] { cellHousing, new ItemStack(ModItems.EU_STORAGE_COMPONENT, 1, meta), });
+        }
     }
 
     private static void registerHatchRecipes(IItemContainer[] standardHatches, IItemContainer[] meStandardHatches) {
-        ItemStack interfaceItem = AEApi.instance()
-            .definitions()
-            .blocks()
-            .iface()
-            .maybeStack(1)
-            .orNull();
-        ItemStack energyCellDenseItem = AEApi.instance()
-            .definitions()
-            .blocks()
-            .energyCellDense()
-            .maybeStack(2)
-            .orNull();
-        if (interfaceItem == null || energyCellDenseItem == null) {
-            return;
-        }
+        ItemStack interfaceItem = getModItem(AE2_ID, "tile.BlockInterface", 1);
+        ItemStack energyCellDenseItem = getModItem(AE2_ID, "tile.BlockDenseEnergyCell", 2);
 
         for (int tier = 0; tier <= 14; tier++) {
             if (tier >= standardHatches.length || tier >= meStandardHatches.length) {
@@ -475,16 +597,7 @@ public final class RecipeRegistration {
 
     private static void registerMultiHatchRecipes(IItemContainer[] multiHatches, IItemContainer[] meMultiHatches,
         int startTier, int interfaceCount) {
-        ItemStack interfaceItem = AEApi.instance()
-            .definitions()
-            .blocks()
-            .iface()
-            .maybeStack(interfaceCount)
-            .orNull();
-
-        if (interfaceItem == null) {
-            return;
-        }
+        ItemStack interfaceItem = getModItem(AE2_ID, "tile.BlockInterface", interfaceCount);
 
         for (int tier = startTier; tier <= 14; tier++) {
             if (tier >= multiHatches.length || tier >= meMultiHatches.length) {
@@ -511,4 +624,26 @@ public final class RecipeRegistration {
         }
     }
 
+    private static @NotNull ItemStack getModItem(String modId, String itemId) {
+        return getModItem(modId, itemId, 1, 0);
+    }
+
+    private static @NotNull ItemStack getModItem(String modId, String itemId, int amount) {
+        return getModItem(modId, itemId, amount, 0);
+    }
+
+    private static @NotNull ItemStack getModItem(String modId, String itemId, int amount, int meta) {
+        Item item = GameRegistry.findItem(modId, itemId);
+        ItemStack result;
+        if (item == null) {
+            if (!PANIC_MODE_NULL) {
+                result = new ItemStack(Blocks.fire);
+                result.setStackDisplayName(EnumChatFormatting.RED + "Missing Item: " + modId + ":" + itemId);
+            } else {
+                throw new IllegalStateException("Missing Item: " + modId + ":" + itemId);
+            }
+        }
+        result = new ItemStack(item, amount, meta);
+        return result;
+    }
 }
