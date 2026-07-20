@@ -1,15 +1,21 @@
 package cn.dancingsnow.appeu.registry;
 
 import static gregtech.api.recipe.RecipeMaps.assemblerRecipes;
+import static gregtech.api.recipe.RecipeMaps.centrifugeRecipes;
 import static gregtech.api.recipe.RecipeMaps.circuitAssemblerRecipes;
+import static gregtech.api.recipe.RecipeMaps.fluidSolidifierRecipes;
+import static gregtech.api.recipe.RecipeMaps.mixerRecipes;
 import static gregtech.api.util.GTRecipeBuilder.HALF_INGOTS;
 import static gregtech.api.util.GTRecipeBuilder.INGOTS;
 import static gregtech.api.util.GTRecipeBuilder.MINUTES;
 import static gregtech.api.util.GTRecipeBuilder.PANIC_MODE_NULL;
 import static gregtech.api.util.GTRecipeBuilder.SECONDS;
 import static gregtech.api.util.GTRecipeConstants.AssemblyLine;
+import static gregtech.api.util.GTRecipeConstants.COIL_HEAT;
 import static gregtech.api.util.GTRecipeConstants.RESEARCH_ITEM;
 import static gregtech.api.util.GTRecipeConstants.SCANNING;
+import static gregtech.api.util.GTRecipeConstants.UniversalChemical;
+import static gtPlusPlus.api.recipe.GTPPRecipeMaps.alloyBlastSmelterRecipes;
 
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
@@ -29,6 +35,7 @@ import gregtech.api.enums.Materials;
 import gregtech.api.enums.OrePrefixes;
 import gregtech.api.enums.TierEU;
 import gregtech.api.interfaces.IItemContainer;
+import gregtech.api.objects.OreDictItemStack;
 import gregtech.api.objects.SubstituteFluidStack;
 import gregtech.api.util.GTModHandler;
 import gregtech.api.util.GTOreDictUnificator;
@@ -403,6 +410,11 @@ public final class RecipeRegistration {
     // endregion
 
     public static void register() {
+        registerTitaniumAluminumCarbideRecipe();
+        registerDimethylSulfoxideRecipe();
+        registerTitaniumCarbideMXeneRecipes();
+        registerStorageCellHousingRecipes();
+
         registerHatchRecipes(ItemList.HATCHES_DYNAMO, ModItems.ME_DYNAMO_HATCH);
         registerHatchRecipes(ItemList.HATCHES_ENERGY, ModItems.ME_ENERGY_HATCH);
 
@@ -528,8 +540,8 @@ public final class RecipeRegistration {
             .itemInputs(
                 GTOreDictUnificator.get(OrePrefixes.circuit, Materials.UV, 4),
                 GTOreDictUnificator.get(OrePrefixes.circuit, Materials.LuV, 16),
-                ItemList.ZPM2.get(1),
-                ItemList.Circuit_Board_Plastic_Advanced.get(1))
+                ItemList.Energy_Cluster.get(1),
+                ItemList.Circuit_Board_Bio_Ultra.get(1))
             .fluidInputs(SubstituteFluidStack.soldering(HALF_INGOTS))
             .itemOutputs(new ItemStack(ModItems.EU_STORAGE_COMPONENT, 1, 7))
             .circuit(1)
@@ -544,6 +556,110 @@ public final class RecipeRegistration {
                 new ItemStack(ModItems.EU_STORAGE_CELL, 1, meta),
                 new Object[] { cellHousing, new ItemStack(ModItems.EU_STORAGE_COMPONENT, 1, meta), });
         }
+    }
+
+    private static void registerTitaniumAluminumCarbideRecipe() {
+        GTRecipeBuilder.builder()
+            .itemInputs(Materials.Titanium.getDust(3), Materials.Aluminium.getDust(1), Materials.Carbon.getDust(2))
+            .circuit(3)
+            .fluidOutputs(ModMaterials.TitaniumAluminumCarbide.getMolten(6 * INGOTS))
+            .metadata(
+                COIL_HEAT,
+                ModMaterials.TitaniumAluminumCarbide.getStats()
+                    .getMeltingPoint())
+            .duration(2 * MINUTES)
+            .eut(TierEU.RECIPE_IV)
+            .addTo(alloyBlastSmelterRecipes);
+    }
+
+    private static void registerStorageCellHousingRecipes() {
+        ItemStack clearGlassPane = getModItem("TConstruct", "GlassPane");
+
+        registerStorageCellHousingRecipe(
+            0,
+            OrePrefixes.plate.get(Materials.RedAlloy),
+            GTOreDictUnificator.get(OrePrefixes.plate, Materials.RedAlloy, 3),
+            clearGlassPane);
+        registerStorageCellHousingRecipe(
+            1,
+            new ItemStack(ModItems.TITANIUM_CARBIDE_MXENE_SHEET),
+            new ItemStack(ModItems.TITANIUM_CARBIDE_MXENE_SHEET, 3),
+            clearGlassPane);
+    }
+
+    private static void registerStorageCellHousingRecipe(int meta, Object housingPlate,
+        ItemStack assemblerHousingPlates, ItemStack clearGlassPane) {
+        GTModHandler.addCraftingRecipe(
+            new ItemStack(ModItems.EU_STORAGE_CELL_HOUSING, 1, meta),
+            GTModHandler.RecipeBits.BITS_STD,
+            new Object[] { "hAB", "CDC", "BCd", 'A', OrePrefixes.plate.get(Materials.CertusQuartz), 'B',
+                OrePrefixes.screw.get(Materials.CertusQuartz), 'C', housingPlate, 'D', clearGlassPane });
+        GTModHandler.addCraftingRecipe(
+            new ItemStack(ModItems.EU_STORAGE_CELL_HOUSING, 1, meta),
+            GTModHandler.RecipeBits.BITS_STD,
+            new Object[] { "dAB", "CDC", "BCh", 'A', OrePrefixes.plate.get(Materials.CertusQuartz), 'B',
+                OrePrefixes.screw.get(Materials.CertusQuartz), 'C', housingPlate, 'D', clearGlassPane });
+
+        GTRecipeBuilder.builder()
+            .itemInputs(
+                GTOreDictUnificator.get(OrePrefixes.plate, Materials.CertusQuartz, 1),
+                GTOreDictUnificator.get(OrePrefixes.screw, Materials.CertusQuartz, 2),
+                assemblerHousingPlates,
+                new OreDictItemStack("paneGlass", 1))
+            .itemOutputs(new ItemStack(ModItems.EU_STORAGE_CELL_HOUSING, 1, meta))
+            .duration(10 * SECONDS)
+            .eut(TierEU.RECIPE_LV)
+            .addTo(assemblerRecipes);
+    }
+
+    private static void registerDimethylSulfoxideRecipe() {
+        // Simplified net reaction: 2 CH3OH + S -> C2H6OS + H2O.
+        GTRecipeBuilder.builder()
+            .itemInputs(Materials.Sulfur.getDust(1), Materials.Empty.getCells(1))
+            .itemOutputs(Materials.Water.getCells(1))
+            .fluidInputs(Materials.Methanol.getFluid(2_000))
+            .fluidOutputs(ModMaterials.DimethylSulfoxide.getFluidOrGas(1_000))
+            .duration(30 * SECONDS)
+            .eut(TierEU.RECIPE_HV)
+            .addTo(UniversalChemical);
+    }
+
+    private static void registerTitaniumCarbideMXeneRecipes() {
+        GTRecipeBuilder.builder()
+            .itemInputs(ModMaterials.TitaniumAluminumCarbide.get(OrePrefixes.dust, 1))
+            .itemOutputs(
+                ModMaterials.MultilayerTitaniumCarbideMXene.get(OrePrefixes.dust, 1),
+                Materials.AluminiumFluoride.getDust(1))
+            .fluidInputs(Materials.HydrofluoricAcid.getFluid(1_000))
+            .fluidOutputs(Materials.Hydrogen.getGas(500))
+            .duration(2 * MINUTES)
+            .eut(TierEU.RECIPE_IV)
+            .addTo(UniversalChemical);
+
+        GTRecipeBuilder.builder()
+            .itemInputs(ModMaterials.MultilayerTitaniumCarbideMXene.get(OrePrefixes.dust, 1))
+            .circuit(1)
+            .fluidInputs(ModMaterials.DimethylSulfoxide.getFluidOrGas(500))
+            .fluidOutputs(ModMaterials.IntercalatedTitaniumCarbideMXeneSlurry.getFluidOrGas(1_000))
+            .duration(1 * MINUTES)
+            .eut(TierEU.RECIPE_IV)
+            .addTo(mixerRecipes);
+
+        GTRecipeBuilder.builder()
+            .circuit(1)
+            .fluidInputs(ModMaterials.IntercalatedTitaniumCarbideMXeneSlurry.getFluidOrGas(1_000))
+            .fluidOutputs(ModMaterials.DelaminatedTitaniumCarbideMXeneSlurry.getFluidOrGas(1_000))
+            .duration(1 * MINUTES + 30 * SECONDS)
+            .eut(TierEU.RECIPE_IV)
+            .addTo(centrifugeRecipes);
+
+        GTRecipeBuilder.builder()
+            .itemInputs(ItemList.Shape_Mold_Plate.get(0))
+            .itemOutputs(new ItemStack(ModItems.TITANIUM_CARBIDE_MXENE_SHEET))
+            .fluidInputs(ModMaterials.DelaminatedTitaniumCarbideMXeneSlurry.getFluidOrGas(1_000))
+            .duration(30 * SECONDS)
+            .eut(TierEU.RECIPE_LV)
+            .addTo(fluidSolidifierRecipes);
     }
 
     private static void registerHatchRecipes(IItemContainer[] standardHatches, IItemContainer[] meStandardHatches) {

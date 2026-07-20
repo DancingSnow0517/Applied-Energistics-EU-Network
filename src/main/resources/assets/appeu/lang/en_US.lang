@@ -23,6 +23,19 @@ item.appeu.eu_storage_cell_1024k.name=1024k EU Storage Cell
 item.appeu.eu_storage_cell_4096k.name=4096k EU Storage Cell
 item.appeu.eu_storage_cell_16384k.name=16384k EU Storage Cell
 item.appeu.eu_storage_cell.invalid.name=Invalid EU Storage Cell
+item.appeu.titanium_carbide_mxene_sheet.name=Titanium Carbide MXene Sheet
+
+# Materials
+Material.titaniumaluminumcarbide=Titanium Aluminum Carbide
+Material.titaniumaluminumcarbide.ChemicalFormula=Ti₃AlC₂
+Material.multilayertitaniumcarbidemxene=Multilayer Titanium Carbide MXene
+Material.multilayertitaniumcarbidemxene.ChemicalFormula=Ti₃C₂Tx
+Material.dimethylsulfoxide=Dimethyl Sulfoxide
+Material.dimethylsulfoxide.ChemicalFormula=C₂H₆OS
+Material.intercalatedtitaniumcarbidemxeneslurry=Intercalated Titanium Carbide MXene Slurry
+Material.intercalatedtitaniumcarbidemxeneslurry.ChemicalFormula=Ti₃C₂Tx?C₂H₆OS???
+Material.delaminatedtitaniumcarbidemxeneslurry=Delaminated Titanium Carbide MXene Slurry
+Material.delaminatedtitaniumcarbidemxeneslurry.ChemicalFormula=Ti₃C₂Tx???
 
 # EU stack
 appeu.stack.eu=EU Energy

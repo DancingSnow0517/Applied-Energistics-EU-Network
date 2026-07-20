@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.oredict.OreDictionary;
 
 import cn.dancingsnow.appeu.hatch.HatchDirection;
 import cn.dancingsnow.appeu.hatch.HatchSpec;
@@ -12,6 +13,7 @@ import cn.dancingsnow.appeu.item.ItemEUDisplay;
 import cn.dancingsnow.appeu.item.ItemEUStorageCell;
 import cn.dancingsnow.appeu.item.ItemEUStorageCellHousing;
 import cn.dancingsnow.appeu.item.ItemEUStorageComponent;
+import cn.dancingsnow.appeu.item.ItemTitaniumCarbideMXeneSheet;
 import cpw.mods.fml.common.registry.GameRegistry;
 import gregtech.api.interfaces.IItemContainer;
 
@@ -21,6 +23,7 @@ public final class ModItems {
     public static final ItemEUStorageCellHousing EU_STORAGE_CELL_HOUSING = new ItemEUStorageCellHousing();
     public static final ItemEUStorageComponent EU_STORAGE_COMPONENT = new ItemEUStorageComponent();
     public static final ItemEUStorageCell EU_STORAGE_CELL = new ItemEUStorageCell();
+    public static final ItemTitaniumCarbideMXeneSheet TITANIUM_CARBIDE_MXENE_SHEET = new ItemTitaniumCarbideMXeneSheet();
 
     public static final IItemContainer[] ME_ENERGY_HATCH = createHatchContainers();
     public static final IItemContainer[] ME_DYNAMO_HATCH = createHatchContainers();
@@ -69,6 +72,8 @@ public final class ModItems {
         GameRegistry.registerItem(EU_STORAGE_CELL_HOUSING, "eu_storage_cell_housing");
         GameRegistry.registerItem(EU_STORAGE_COMPONENT, "eu_storage_component");
         GameRegistry.registerItem(EU_STORAGE_CELL, "eu_storage_cell");
+        GameRegistry.registerItem(TITANIUM_CARBIDE_MXENE_SHEET, "titanium_carbide_mxene_sheet");
+        OreDictionary.registerOre("plateTitaniumCarbideMXene", TITANIUM_CARBIDE_MXENE_SHEET);
     }
 
     static void setHatch(HatchSpec spec, ItemStack stack) {

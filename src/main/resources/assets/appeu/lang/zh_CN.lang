@@ -23,6 +23,19 @@ item.appeu.eu_storage_cell_1024k.name=1024k EU 存储单元
 item.appeu.eu_storage_cell_4096k.name=4096k EU 存储单元
 item.appeu.eu_storage_cell_16384k.name=16384k EU 存储单元
 item.appeu.eu_storage_cell.invalid.name=无效的 EU 存储单元
+item.appeu.titanium_carbide_mxene_sheet.name=碳化钛 MXene 片
+
+# Materials
+Material.titaniumaluminumcarbide=钛铝碳
+Material.titaniumaluminumcarbide.ChemicalFormula=Ti₃AlC₂
+Material.multilayertitaniumcarbidemxene=多层碳化钛 MXene
+Material.multilayertitaniumcarbidemxene.ChemicalFormula=Ti₃C₂Tx
+Material.dimethylsulfoxide=二甲基亚砜
+Material.dimethylsulfoxide.ChemicalFormula=C₂H₆OS
+Material.intercalatedtitaniumcarbidemxeneslurry=插层碳化钛 MXene 浆料
+Material.intercalatedtitaniumcarbidemxeneslurry.ChemicalFormula=Ti₃C₂Tx?C₂H₆OS???
+Material.delaminatedtitaniumcarbidemxeneslurry=剥离碳化钛 MXene 浆料
+Material.delaminatedtitaniumcarbidemxeneslurry.ChemicalFormula=Ti₃C₂Tx???
 
 # EU stack
 appeu.stack.eu=EU 能源
