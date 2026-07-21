@@ -24,6 +24,7 @@ import appeng.api.storage.data.IItemList;
 import appeng.items.AEBaseCell;
 import appeng.util.InventoryAdaptor;
 import appeng.util.IterationCounter;
+import cn.dancingsnow.appeu.Config;
 import cn.dancingsnow.appeu.registry.ModCreativeTab;
 import cn.dancingsnow.appeu.registry.ModItems;
 import cn.dancingsnow.appeu.storage.EUCellTier;
@@ -121,11 +122,6 @@ public class ItemEUStorageCell extends AEBaseCell {
     }
 
     @Override
-    public boolean storableInStorageCell() {
-        return false;
-    }
-
-    @Override
     public boolean isStorageCell(ItemStack stack) {
         return stack != null && stack.getItem() == this && tierOrNull(stack.getItemDamage()) != null;
     }
@@ -137,7 +133,7 @@ public class ItemEUStorageCell extends AEBaseCell {
             tier == null ? 0 : tier.totalBytes(),
             tier == null ? 0 : EUConstants.TOTAL_TYPES,
             EUConstants.BYTES_PER_TYPE,
-            Math.toIntExact(EUConstants.EU_PER_BYTE));
+            Math.toIntExact(Config.storageCellEUPerByte));
     }
 
     @Override

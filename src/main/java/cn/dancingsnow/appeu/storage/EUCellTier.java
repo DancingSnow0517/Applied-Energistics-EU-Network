@@ -1,5 +1,7 @@
 package cn.dancingsnow.appeu.storage;
 
+import cn.dancingsnow.appeu.Config;
+
 public enum EUCellTier {
 
     K1(0, "1k", 1, 0.5),
@@ -42,7 +44,7 @@ public enum EUCellTier {
     }
 
     public long capacityEU() {
-        return Math.multiplyExact(totalBytes(), EUConstants.EU_PER_BYTE);
+        return Math.multiplyExact(totalBytes(), Config.storageCellEUPerByte);
     }
 
     public static EUCellTier fromMeta(int meta) {

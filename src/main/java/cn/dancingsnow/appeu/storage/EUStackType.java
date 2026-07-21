@@ -14,6 +14,7 @@ import org.jetbrains.annotations.Nullable;
 
 import appeng.api.storage.data.IAEStackType;
 import appeng.api.storage.data.IItemList;
+import cn.dancingsnow.appeu.Config;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import gregtech.api.util.GTModHandler;
@@ -197,7 +198,7 @@ public final class EUStackType implements IAEStackType<EUStack> {
 
     @Override
     public int getAmountPerByte() {
-        return Math.toIntExact(EUConstants.EU_PER_BYTE);
+        return Math.toIntExact(Config.storageCellEUPerByte);
     }
 
     private static ItemStack copySingle(ItemStack container) {
@@ -251,7 +252,7 @@ public final class EUStackType implements IAEStackType<EUStack> {
     }
 
     private @Nullable ChargeState getChargeState(@Nullable ItemStack container) {
-        if (container == null || !GTModHandler.isElectricItem(container)) {
+        if (!GTModHandler.isElectricItem(container)) {
             return null;
         }
 

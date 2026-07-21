@@ -11,6 +11,7 @@ public class Config {
 
     public static int metaTileEntityIdStart = 27_000;
     public static int materialIdStart = 22_000;
+    public static long storageCellEUPerByte = 1024 * 1024;
 
     public static void synchronizeConfiguration(File configFile) {
         Configuration configuration = new Configuration(configFile);
@@ -31,6 +32,13 @@ public class Config {
             1,
             32000,
             "Starting Material ID for the contiguous 5-ID Ti3C2Tx production material range.");
+
+        storageCellEUPerByte = Long.parseLong(
+            configuration.getString(
+                "storageCellEUPerByte",
+                Configuration.CATEGORY_GENERAL,
+                String.valueOf(storageCellEUPerByte),
+                "Storage Cell EU Per Byte"));
 
         if (configuration.hasChanged()) {
             configuration.save();
