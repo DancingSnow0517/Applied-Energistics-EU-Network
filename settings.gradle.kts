@@ -26,3 +26,5 @@ plugins {
         version = "2.9.0-beta-2"
     }
 }
+
+rootProject.name = "appeu"

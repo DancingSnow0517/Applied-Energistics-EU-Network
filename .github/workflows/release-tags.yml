@@ -7,8 +7,11 @@ on:
 
 permissions:
   contents: write
+  packages: write
 
 jobs:
   release-tags:
     uses: GTNewHorizons/GTNH-Actions-Workflows/.github/workflows/release-tags.yml@master
-    secrets: inherit
+    secrets:
+      MAVEN_USER: ${{ github.actor }}
+      MAVEN_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
