@@ -46,7 +46,7 @@ import tectech.thing.CustomItemList;
 
 public final class RecipeRegistration {
 
-    public static final String AE2_ID = "appliedergistics2";
+    public static final String AE2_ID = "appliedenergistics2";
 
     private RecipeRegistration() {}
 
@@ -758,8 +758,9 @@ public final class RecipeRegistration {
             } else {
                 throw new IllegalStateException("Missing Item: " + modId + ":" + itemId);
             }
+        } else {
+            result = new ItemStack(item, amount, meta);
         }
-        result = new ItemStack(item, amount, meta);
         return result;
     }
 }
