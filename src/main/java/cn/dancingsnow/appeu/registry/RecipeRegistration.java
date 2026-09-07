@@ -1,5 +1,6 @@
 package cn.dancingsnow.appeu.registry;
 
+import static gregtech.api.recipe.RecipeMaps.alloyBlastSmelterRecipes;
 import static gregtech.api.recipe.RecipeMaps.assemblerRecipes;
 import static gregtech.api.recipe.RecipeMaps.centrifugeRecipes;
 import static gregtech.api.recipe.RecipeMaps.circuitAssemblerRecipes;
@@ -15,7 +16,6 @@ import static gregtech.api.util.GTRecipeConstants.COIL_HEAT;
 import static gregtech.api.util.GTRecipeConstants.RESEARCH_ITEM;
 import static gregtech.api.util.GTRecipeConstants.SCANNING;
 import static gregtech.api.util.GTRecipeConstants.UniversalChemical;
-import static gtPlusPlus.api.recipe.GTPPRecipeMaps.alloyBlastSmelterRecipes;
 
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;

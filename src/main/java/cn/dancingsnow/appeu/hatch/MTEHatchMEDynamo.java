@@ -3,6 +3,7 @@ package cn.dancingsnow.appeu.hatch;
 import static gregtech.api.enums.GTValues.V;
 
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.StatCollector;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import appeng.api.implementations.IPowerChannelState;
@@ -23,7 +24,6 @@ import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.implementations.MTEHatchDynamo;
 import gregtech.api.util.GTSplit;
-import gregtech.api.util.GTUtility;
 import gregtech.api.util.tooltip.TooltipHelper;
 
 @IMetaTileEntity.SkipGenerateDescription
@@ -104,7 +104,8 @@ public class MTEHatchMEDynamo extends MTEHatchDynamo
     public String[] getDescription() {
         return GTSplit.splitLocalizedWithSuffix(
             "appeu.hatch.dynamo.desc",
-            new String[] { GTUtility.translate("gt.tileentity.eup_out", TooltipHelper.voltageText(maxEUOutput())) });
+            new String[] { StatCollector
+                .translateToLocalFormatted("gt.tileentity.eup_out", TooltipHelper.voltageText(maxEUOutput())) });
     }
 
     @Override
